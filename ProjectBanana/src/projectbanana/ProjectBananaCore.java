@@ -2,7 +2,7 @@ package projectbanana;
 
 import projectbanana.main.Game;
 
-public class Core {
+public class ProjectBananaCore {
 
 	public static Game game;
 	

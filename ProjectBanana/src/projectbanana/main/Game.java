@@ -5,7 +5,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.VolatileImage;
 
-import projectbanana.Core;
+import projectbanana.ProjectBananaCore;
 import projectbanana.main.menu.MainMenu;
 import projectbanana.main.menu.Menu;
 
@@ -124,7 +124,7 @@ public class Game implements Runnable {
 	}
 	
 	public static void showMenu(Menu menu) {
-		Core.game.stop();
+		ProjectBananaCore.game.stop();
 		removeCurrentMenu();
 		
 		visibleMenu = menu;

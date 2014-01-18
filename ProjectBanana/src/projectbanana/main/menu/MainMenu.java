@@ -1,6 +1,6 @@
 package projectbanana.main.menu;
 
-import projectbanana.Core;
+import projectbanana.ProjectBananaCore;
 import projectbanana.main.Game;
 import projectbanana.main.values.MenuId;
 
@@ -18,7 +18,7 @@ public class MainMenu extends Menu {
 	
 	@Override
 	public void buttonReleased(Button button) {
-		if(button.equals(startButton)) Core.game.start();
+		if(button.equals(startButton)) ProjectBananaCore.game.start();
 		else if(button.equals(optionsButton)) Game.showMenu(new OptionsMenu());
 		else if(button.equals(exitButton)) System.exit(0);
 	}
