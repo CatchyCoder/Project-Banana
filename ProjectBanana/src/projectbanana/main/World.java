@@ -16,7 +16,7 @@ public class World {
 	
 	public static TrinityShipEntity player = new TrinityShipEntity(SIZE.width / 2, SIZE.height / 2);
 	//public static EnemyEntity[] enemies = new EnemyEntity[(int) (((SIZE.width * SIZE.height) / 100) * 0.01)];
-	public static EnemyEntity[] enemies = new EnemyEntity[100];
+	public static EnemyEntity[] enemies = new EnemyEntity[200];
 	private Point[] stars = new Point[(int) (((SIZE.width * SIZE.height) / 100) * 0.006)];
 	
 	// For efficiency statistics
@@ -69,7 +69,7 @@ public class World {
 	}
 	
 	private void renderBorder(Graphics g) {
-		int width = 25;
+		int width = 17;
 		
 		// This draws the border around the world
 		g.setColor(Color.DARK_GRAY);

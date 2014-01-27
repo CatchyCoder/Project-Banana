@@ -56,7 +56,7 @@ public class EnemyEntity extends DrawnEntity {
 		// If entity is in range of Player
 		if(this.inRange(World.player, range)) {
 			this.lookAt(World.player);
-			this.accForward(homingSpeed);
+			this.accForward(-homingSpeed);
 			
 			// If close to player, damp the velocity
 			if(sqrDisFromPlayer <= Math.pow(World.player.width, 2)) this.applyVelDamping();
