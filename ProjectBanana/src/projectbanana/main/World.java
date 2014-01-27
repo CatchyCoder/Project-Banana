@@ -15,10 +15,8 @@ public class World {
 	public static final Dimension SIZE = new Dimension((int) (1000 * SCALE), (int) (1000 * SCALE));
 	
 	public static TrinityShipEntity player = new TrinityShipEntity(SIZE.width / 2, SIZE.height / 2);
-	
 	//public static EnemyEntity[] enemies = new EnemyEntity[(int) (((SIZE.width * SIZE.height) / 100) * 0.01)];
-	public static EnemyEntity[] enemies = new EnemyEntity[200];
-	
+	public static EnemyEntity[] enemies = new EnemyEntity[100];
 	private Point[] stars = new Point[(int) (((SIZE.width * SIZE.height) / 100) * 0.006)];
 	
 	// For efficiency statistics
@@ -53,7 +51,7 @@ public class World {
 		
 		renderBorder(g);
 		
-		if(Game.showPerformance) renderPerformance(g);
+		if(Engine.showPerformance) renderPerformance(g);
 	}
 	
 	private void renderBackground(Graphics g) {
@@ -83,7 +81,7 @@ public class World {
 	
 	private void renderPerformance(Graphics g) {
 		if(loads.size() >= 10) loads.remove(0);
-		loads.add((int) Game.load);
+		loads.add((int) Engine.load);
 		int avg = 0;
 		for(Integer load : loads) avg += load;
 		avg /= loads.size();

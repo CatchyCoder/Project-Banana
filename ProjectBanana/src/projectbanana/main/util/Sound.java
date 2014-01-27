@@ -4,7 +4,7 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
-import projectbanana.main.Game;
+import projectbanana.main.Engine;
 
 public class Sound {
 
@@ -30,7 +30,7 @@ public class Sound {
 	
 	public void play() {
 		try {
-			if(Game.sound && clip != null) {
+			if(Engine.sound && clip != null) {
 				new Thread() {
 					@Override
 					public void run() {

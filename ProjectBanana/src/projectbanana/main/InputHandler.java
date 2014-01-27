@@ -8,9 +8,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 
-import projectbanana.main.menu.Button;
 import projectbanana.main.menu.MainMenu;
-import projectbanana.main.values.MenuId;
 
 public class InputHandler extends KeyAdapter implements MouseListener, MouseMotionListener, MouseWheelListener {
 	
@@ -18,15 +16,9 @@ public class InputHandler extends KeyAdapter implements MouseListener, MouseMoti
 	private boolean isMenuCalled;
 	
 	public void showCalledMenu() {
-		if(Game.getVisibleMenu() == null) Game.showMenu(new MainMenu());
-		else {
-			int menuId = Game.getVisibleMenu().getMenuId();
-			
-			if(menuId == MenuId.MAIN_MENU.getId()) System.exit(0);
-			else if(menuId == MenuId.OPTIONS_MENU.getId()) { Game.showMenu(new MainMenu());
-				System.out.println("Go to main menu");
-			}
-		}
+		
+		Engine.stop();
+		Engine.window.setPage(new MainMenu(Engine.window, 0, 0, Engine.SIZE.width, Engine.SIZE.height, "/menu/"));
 		
 		isMenuCalled = false;
 	}
@@ -44,7 +36,7 @@ public class InputHandler extends KeyAdapter implements MouseListener, MouseMoti
 		
 		// Checking if a menu was called to showHandling Menu pop-ups
 		else if(src == KeyEvent.VK_ESCAPE) {
-			if(Game.isRunning()) isMenuCalled = true;
+			if(Engine.isRunning()) isMenuCalled = true;
 			else showCalledMenu();
 		}
 	}
@@ -62,78 +54,32 @@ public class InputHandler extends KeyAdapter implements MouseListener, MouseMoti
 	}
 	
 	@Override
-	public void mouseClicked(MouseEvent mClicked) {
-		mClicked.consume();
-	}
+	public void mouseClicked(MouseEvent mClicked) {}
 
 	@Override
-	public void mouseEntered(MouseEvent mEntered) {
-		Object object = mEntered.getSource();
-		mEntered.consume();
-		
-		if(Game.getVisibleMenu() == null) return;
-		
-		for(Button button : Game.getVisibleMenu().getButtons()) {
-			if(object.equals(button)) button.displayHoverImage();
-		}
-	}
+	public void mouseEntered(MouseEvent mEntered) {}
 
 	@Override
-	public void mouseExited(MouseEvent mExited) {
-		Object object = mExited.getSource();
-		mExited.consume();
-		
-		if(Game.getVisibleMenu() == null) return;
-		
-		for(Button button : Game.getVisibleMenu().getButtons()) {
-			if(object.equals(button)) button.displayImage();
-		}		
-	}
+	public void mouseExited(MouseEvent mExited) {}
 
 	@Override
-	public void mousePressed(MouseEvent mPressed) {
-		Object object = mPressed.getSource();
-		mPressed.consume();
-		
-		if(Game.getVisibleMenu() == null) return;
-		
-		// Finding out what button was pressed, and letting the current Menu handle the rest
-		for(Button button : Game.getVisibleMenu().getButtons()) {
-			if(object.equals(button)) {
-				button.displayHoverImage();
-				Game.getVisibleMenu().buttonReleased(button);
-			}
-		}
-	}
+	public void mousePressed(MouseEvent mPressed) {}
 
 	@Override
-	public void mouseReleased(MouseEvent mReleased) {
-		mReleased.consume();
-	}
+	public void mouseReleased(MouseEvent mReleased) {}
 	
 	@Override
-	public void mouseDragged(MouseEvent mDragged) {
-		mousePressed(mDragged);
-		mDragged.consume();
-	}
+	public void mouseDragged(MouseEvent mDragged) {}
 	
 	@Override
-	public void mouseMoved(MouseEvent mMoved) {
-		Object object = mMoved.getSource();
-		mMoved.consume();
-		
-		if(Game.getVisibleMenu() == null) return;
-		
-		// If the mouse moves on or off the JPanel, all images are set to their default image
-		if(object.equals(Game.getVisibleMenu())) Game.getVisibleMenu().resetButtonImages();		
-	}
+	public void mouseMoved(MouseEvent mMoved) {}
 	
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent mWheel) {
 		double amount = 0.1;
-		if(mWheel.isControlDown()) Game.zoom = 2;
-		if(mWheel.getWheelRotation() == 1) Game.zoom -= amount;
-		else Game.zoom += amount;
+		if(mWheel.isControlDown()) Engine.zoom = 2;
+		else if(mWheel.getWheelRotation() == 1) Engine.zoom -= amount;
+		else Engine.zoom += amount;
 		mWheel.consume();
 	}
 	

@@ -1,24 +1,31 @@
 package projectbanana.main.menu;
 
-import projectbanana.main.Game;
-import projectbanana.main.values.MenuId;
+import java.awt.event.MouseEvent;
 
-public class OptionsMenu extends Menu {
+import projectbanana.main.Engine;
+import projectbanana.main.values.MenuId;
+import userinterface.page.Page;
+import userinterface.window.Window;
+
+public class OptionsMenu extends Page {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private OnOffButton soundButton = new OnOffButton(this, 0, 0, "SoundOn.png", "SoundOn.png", "SoundOff.png", "SoundOff.png", Game.sound);
+	//private OnOffButton soundButton = new OnOffButton(this, 0, 0, "SoundOn.png", "SoundOn.png", "SoundOff.png", "SoundOff.png", Engine.sound);
 
-	public OptionsMenu() {
-		super(MenuId.OPTIONS_MENU.getId());	}
+	public OptionsMenu(Window window, int x, int y, int width, int height, String resourcePath) {
+		super(window, x, y, width, height, resourcePath);
+	}
 
 	@Override
-	public void buttonReleased(Button button) {
-		Game.sound = !Game.sound;
-		if(button.equals(soundButton)) soundButton.flipState();
+	public void mousePressed(MouseEvent event) {
+		Object source = event.getSource();
 		
-		// Must repaint the menu on the screen to update the button
-		Game.showMenu(new OptionsMenu());
+		/*Engine.sound = !Engine.sound;
+		if(source.equals(soundButton)) soundButton.flipState();
+		
+		// Must repaint the menu on the screen to update the button  			CHECK IF WE NEED THIS NOW
+		Engine.window.setPage(new OptionsMenu());*/
 	}
 
 }

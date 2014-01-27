@@ -5,13 +5,15 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.VolatileImage;
 
-import projectbanana.ProjectBananaCore;
+import projectbanana.Core;
 import projectbanana.main.menu.MainMenu;
-import projectbanana.main.menu.Menu;
+import userinterface.window.Window;
 
-public class Game implements Runnable {
+public final class Engine implements Runnable {
 	
 	/* TODO:
+	 * * See of the use of Runnable for in Engine can be removed
+	 * + Pause the game if it looses focus
 	 * + Add a loading screen after play is pressed
 	 * * Change how collision handling works, have the World check for collision, and then
 	 * 		notify the objects if & what they are colliding with (calls a method all Entities
@@ -27,47 +29,46 @@ public class Game implements Runnable {
 	 * - Ship gets slightly bigger when on the left or top side of the map (Easier to see with circle drawn around it)
 	 */
 	
-	public static final Dimension SIZE = new Dimension(840, 840); // 840x525 was original
+	public static final Dimension SIZE = new Dimension(840, 840);
 	private static final double SCALE = 1;
 	
 	public static double MAX_FPS = 60.0;
 	
 	public static Window window = new Window((int) (SIZE.width * SCALE), (int) (SIZE.height * SCALE));
-	public static InputHandler inputHandler = new InputHandler();
+	public static InputHandler gameInputHandler = new InputHandler(); // Have a separate Input just for the game
 	public static World world;
-	public static VolatileImage image;
-	public static VolatileImage backgroundImage;
-	public static final String FONT_STYLE = "Matisse ITC";
-	private static Menu visibleMenu;
+	public static VolatileImage image, backgroundImage;
 	private Graphics g;
+	
+	public static final String FONT_STYLE = "Matisse ITC";
 	
 	public static boolean sound = false;
 	private static boolean isRunning = false;
 	public static boolean showPerformance = true;
 	
 	public static double zoom = 2.0;
-	
 	public static double load = 0.0;
 	
-	public Game() {
-		window.addMouseListener(inputHandler);
-		window.addKeyListener(inputHandler);
-		window.addMouseWheelListener(inputHandler);
-		visibleMenu = new MainMenu();
-		window.repaint();
+	public Engine() {
+		// Adding input for the actual game
+		window.addKeyListener(gameInputHandler);
+		window.addMouseWheelListener(gameInputHandler);
+		
+		window.addPage(new MainMenu(window, 0, 0, SIZE.width, SIZE.height, "/menu/"));
+		window.setVisible(true);
 	}
 	
-	public void start() {
+	public static void start() {
+		window.removeAllPages();
 		if(world == null) world = new World();
 		isRunning = true;
 		image = window.createVolatileImage(World.SIZE.width, World.SIZE.height);
-		backgroundImage = window.createVolatileImage(SIZE.width, SIZE.height);
-		removeCurrentMenu();
+		backgroundImage = window.createVolatileImage(World.SIZE.width, World.SIZE.height);
 		
-		new Thread(this).start();
+		new Thread(Core.ENGINE).start(); // DOES THIS WORK???
 	}
 	
-	public void stop() {
+	public static void stop() {
 		isRunning = false;
 	}
 	
@@ -80,7 +81,7 @@ public class Game implements Runnable {
 		renderWorld();
 		//World.player.getHUD().render(g);	*** Just put in PlayerEntity?? ***
 		
-		if(inputHandler.isMenuCalled()) inputHandler.showCalledMenu();
+		if(gameInputHandler.isMenuCalled()) gameInputHandler.showCalledMenu();
 		else {
 			double x = World.player.getCenterX();
 			double y = World.player.getCenterY();
@@ -91,7 +92,7 @@ public class Game implements Runnable {
 					(int)(x + (SIZE.width / zoom)), (int)(y + (SIZE.height / zoom)), null);
 			
 			g = window.getGraphics();
-			g.drawImage(backgroundImage, 0, 0, window.getSize().width, window.getSize().height, null);
+			g.drawImage(backgroundImage, 0, 0, null);
 		}
 		
 		g.dispose();
@@ -108,33 +109,8 @@ public class Game implements Runnable {
 		world.render(g);
 	}
 	
-	public static Menu getVisibleMenu() {
-		return visibleMenu;
-	}
-	
 	public static boolean isRunning() {
 		return isRunning;
-	}
-	
-	public static void removeCurrentMenu() {
-		// Removing the menu that is currently being displayed
-		if(visibleMenu != null) window.remove(visibleMenu);
-		visibleMenu = null;
-		window.repaint();
-	}
-	
-	public static void showMenu(Menu menu) {
-		ProjectBananaCore.game.stop();
-		removeCurrentMenu();
-		
-		visibleMenu = menu;
-		
-		window.revalidate();
-		visibleMenu.revalidate();
-		window.requestFocus();
-		visibleMenu.requestFocus();
-		window.repaint();
-		visibleMenu.repaint();
 	}
 	
 	@Override
@@ -160,6 +136,7 @@ public class Game implements Runnable {
 					// Wait until ready for next frame
 					while(Math.abs(System.nanoTime() - frameTime) < FRAME_DELAY) Thread.sleep(0, SLEEP_TIME_NANO);
 					
+					// Perform calculations
 					spareTime = System.nanoTime() - spareTime;
 					frames++;
 					load = (calcTime * 100) / FRAME_DELAY;
@@ -170,7 +147,7 @@ public class Game implements Runnable {
 					if((System.nanoTime() - lastTime) >= (1000 * 1000000)) {
 						sec++;
 						System.out.println(sec + ".) " + frames + " fps");
-						if(spareTime > 0 && frames < MAX_FPS - 2) System.out.println("! === WARNING === ! --> There is spare time, yet max fps is not reached.");
+						if(spareTime > 0 && frames < MAX_FPS - 2) System.err.println("! === WARNING === ! --> There is spare time, yet max fps is not reached.");
 						System.out.println();
 						frames = 0;
 						lastTime = System.nanoTime();
@@ -193,7 +170,7 @@ public class Game implements Runnable {
 			backgroundImage.flush();
 		}
 		catch(Exception e) {
-			System.out.println("Error running main loop:\n");
+			System.err.println("Error running main loop:\n");
 			e.printStackTrace();
 		}
 	}

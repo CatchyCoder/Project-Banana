@@ -6,9 +6,8 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import projectbanana.main.CollisionEvent;
-import projectbanana.main.Game;
+import projectbanana.main.Engine;
 import projectbanana.main.World;
-import projectbanana.main.util.HUD;
 import projectbanana.main.util.Sound;
 import projectbanana.main.values.GeometryId;
 import projectbanana.main.values.RotationId;
@@ -20,7 +19,7 @@ public abstract class PlayerEntity extends BufferedEntity {
 	protected double rotSpeed = 0.075;
 	protected double rotThrust = rotSpeed * 0.05;
 	
-	private final HUD HUD = new HUD();
+	//private final HUD HUD = new HUD();
 	
 	private static final String PATH = "/spaceships/";
 	private final String imagePath;
@@ -64,21 +63,21 @@ public abstract class PlayerEntity extends BufferedEntity {
 			
 			
 			// Respawn the spaceship
-			if(Game.inputHandler.isEnter()) this.respawn();
+			if(Engine.gameInputHandler.isEnter()) this.respawn();
 			
 			// Calculate movement
 			else {
 				// If turning
-				if(Game.inputHandler.isLeft() || Game.inputHandler.isRight()) {
-					if(Game.inputHandler.isLeft()) this.turn(RotationId.COUNTER_CLOCKWISE.getId(), rotSpeed, rotThrust);
-					if(Game.inputHandler.isRight()) this.turn(RotationId.CLOCKWISE.getId(), rotSpeed, rotThrust);
+				if(Engine.gameInputHandler.isLeft() || Engine.gameInputHandler.isRight()) {
+					if(Engine.gameInputHandler.isLeft()) this.turn(RotationId.COUNTER_CLOCKWISE.getId(), rotSpeed, rotThrust);
+					if(Engine.gameInputHandler.isRight()) this.turn(RotationId.CLOCKWISE.getId(), rotSpeed, rotThrust);
 				}
 				
 				// If not turning
 				else if(rotVel != 0) this.applyRotVelDamping();
 				
 				// If accelerating
-				if(Game.inputHandler.isDown()) {
+				if(Engine.gameInputHandler.isDown()) {
 					this.moveForward(thrust, speed);
 					loadImage(thrustImagePath);
 				}
@@ -105,9 +104,5 @@ public abstract class PlayerEntity extends BufferedEntity {
 		int boundingRad = (int)this.boundingRad;
 		//if(this.getGeometryId() == GeometryId.CIRCLE.getId()) g.drawOval((int) this.x + (width / boundingRad), (int) this.y + (width / boundingRad), (int) boundingRad, (int) boundingRad);
 		//else g.drawRect((int) this.x + boundingWidth / 2, (int) this.y + boundingHeight / 2, (int) boundingWidth, (int) boundingHeight);
-	}
-	
-	public HUD getHUD() {
-		return HUD;
 	}
 }

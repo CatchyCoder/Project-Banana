@@ -3,7 +3,7 @@ package projectbanana.main.entity;
 import java.awt.Graphics;
 
 import projectbanana.main.CollisionEvent;
-import projectbanana.main.Game;
+import projectbanana.main.Engine;
 import projectbanana.main.World;
 import projectbanana.main.values.GeometryId;
 import projectbanana.main.values.RotationId;
@@ -55,8 +55,8 @@ public abstract class Entity {
 	}
 	
 	public boolean isOnScreen() {
-		int screenWidth = (int) Game.SIZE.width;
-		int screenHeight = (int) Game.SIZE.height;
+		int screenWidth = (int) Engine.SIZE.width;
+		int screenHeight = (int) Engine.SIZE.height;
 		
 		if(Math.abs(getCenterX() - World.player.getCenterX()) <= ((width + screenWidth) / 2) &&
 				Math.abs(getCenterY() - World.player.getCenterY()) <= ((height + screenHeight) / 2)) return true;
