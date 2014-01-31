@@ -28,11 +28,9 @@ public abstract class PlayerEntity extends BufferedEntity {
 	public ArrayList<Point> points = new ArrayList<Point>();
 	
 	public PlayerEntity(int x, int y, String imageName, String thrustImageName) {
-		super(x, y, PATH + imageName, GeometryId.CIRCLE.getId());
+		super(x, y, PATH + imageName, GeometryId.CIRCLE.getId(), true);
 		imagePath = PATH + imageName;
 		thrustImagePath = PATH + thrustImageName;
-		this.loadImage(imagePath);
-		this.rotateImage();
 		/*int dir = ((int) (Math.random() * 2) == 0 ? 1 : -1);
 		velX = (Math.random() * 15) * dir;
 		dir = ((int) (Math.random() * 2) == 0 ? 1 : -1);
