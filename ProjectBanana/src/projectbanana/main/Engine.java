@@ -18,10 +18,7 @@ public final class Engine implements Runnable {
 	 *  |
 	 *  |-- Entity
 	 * 		|
-	 * 		|-- BufferedEntity
-	 * 			|
-	 * 			|-- CircleEntity
-	 * 			|-- RectangleEntity
+	 * 		|-- BufferedEntity ( With true-false parameter fro choice of rotation)
 	 * * See if you can just use GeometryId.CIRCLE (without an integer get)
 	 * * Force ALL images to be loaded upon startup, somehow, some-way
 	 * 

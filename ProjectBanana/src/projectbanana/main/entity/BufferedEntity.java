@@ -32,6 +32,10 @@ public abstract class BufferedEntity extends Entity {
 		this.startY = (int) this.y;
 	}
 	
+	/*
+	 * DELETE CONSTRUCTOR BELOW LATER
+	 */
+	
 	public BufferedEntity(int x, int y, int width, int height, int ID) { 
 		this(x, y, ID);
 		
@@ -48,7 +52,7 @@ public abstract class BufferedEntity extends Entity {
 		rotateImage();
 	}
 	
-	public BufferedEntity(int x, int y, String imagePath, int ID) {
+	public BufferedEntity(int x, int y, String imagePath, int ID, boolean canRotate) {
 		this(x, y, ID);
 		
 		image = loadImage(imagePath);
