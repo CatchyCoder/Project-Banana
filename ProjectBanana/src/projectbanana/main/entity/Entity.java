@@ -19,7 +19,8 @@ public abstract class Entity implements VisibleObject {
 	protected double lastValidX, lastValidY;
 	
 	protected double vel = 0, velX = 0, velY = 0, accX = 0, accY = 0;
-	protected double rotVel = 0, rotAcc = 0, rotation = (3 * Math.PI) / 2; // Default rotation is facing up (North)
+	protected double rotVel = 0, rotAcc = 0;
+	private double rotation = (3 * Math.PI) / 2; // Default rotation is facing up (North)
 	protected final double MIN_VEL = 0.01, MIN_ROT_VEL = Math.toRadians(0.01); // Slowest speeds that are allowed before velocity goes to 0
 	protected double velDamping = 0.985, rotVelDamping = 0.92;
 	
@@ -264,5 +265,13 @@ public abstract class Entity implements VisibleObject {
 	
 	public int getGeometryId() {
 		return GEOMETRY_ID;
+	}
+	
+	public double getRotation() {
+		return rotation;
+	}
+	
+	public void setRotation(double value) {
+		rotation = value;
 	}
 }

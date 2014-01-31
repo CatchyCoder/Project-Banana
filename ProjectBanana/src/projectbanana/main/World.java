@@ -55,12 +55,13 @@ public class World {
 	}
 	
 	private void renderBackground(Graphics g) {
-		g.setColor(Color.BLACK);
+		int value = 15;
+		g.setColor(new Color(value, value, value));
 		g.fillRect(0, 0, SIZE.width, SIZE.height);
 	}
 	
 	private void renderParticles(Graphics g) {
-		g.setColor(new Color(225, 225, 225));
+		g.setColor(Color.WHITE);
 		int size = 1;
 		
 		for(int x = 0; x < stars.length; x++) {

@@ -12,31 +12,26 @@ import projectbanana.main.util.Sound;
 import projectbanana.main.values.GeometryId;
 
 public class EnemyEntity extends BufferedEntity {
-	
-	private static final int SIZE = 100;
-	public static final double radius = SIZE / 2;
-	
+		
 	private double homingSpeed = 0.25;
 	private double fidgetSpeed = 0.05;
 	private double range = 100;
-		
+	
 	private int renderCount = 0;
 	
 	private Color color = new Color((int) (Math.random() * 210) + 45, 0, 0);
 		
-	BufferedImage bImage = null;
-	
 	public EnemyEntity(int x, int y) {
-		super(x, y, SIZE, SIZE, GeometryId.CIRCLE.getId());
+		super(x, y, "/spaceships/SpaceShipSmallNew.png", GeometryId.CIRCLE.getId(), true);
 		velDamping = 0.99;
 		
-		Graphics g = image.getGraphics();
+		/*Graphics g = image.getGraphics();
 		g.setColor(Color.DARK_GRAY);
 		g.fillOval(0, 0, (int) this.width - 1, (int) this.height - 1);
 		g.setColor(color);
 		g.drawOval(0, 0, (int) this.width - 1, (int) this.height - 1);
 		g.setColor(Color.GREEN);
-		g.drawRect(0, 0, width, height);
+		g.drawRect(0, 0, width, height);*/
 	}
 	
 	@Override
@@ -69,7 +64,9 @@ public class EnemyEntity extends BufferedEntity {
 		// If entity is in range of Player
 		if(this.inRange(World.player, range)) {
 			this.lookAt(World.player);
-			//this.accForward(-homingSpeed);
+			setRotation(getRotation() + Math.PI);
+			
+			this.accForward(homingSpeed);
 			
 			// If close to player, damp the velocity
 			if(sqrDisFromPlayer <= Math.pow(World.player.width, 2)) this.applyVelDamping();
@@ -79,9 +76,9 @@ public class EnemyEntity extends BufferedEntity {
 			// If not moving, fidget around
 			//if(vel == 0) {
 				int dir = ((int) (Math.random() * 2) == 0 ? 1 : -1);
-				//velX += fidgetSpeed * dir;
+				velX += fidgetSpeed * dir;
 				dir = ((int) (Math.random() * 2) == 0 ? 1 : -1);
-				//velY += fidgetSpeed * dir;
+				velY += fidgetSpeed * dir;
 			//}
 			// Otherwise slow down
 			//else this.applyVelDamping();
@@ -98,10 +95,10 @@ public class EnemyEntity extends BufferedEntity {
 			renderCount = 0;
 		}
 		
-		// Draw CHANGES on image
+		/*// Draw CHANGES on image
 		g = image.getGraphics();
 		g.setColor(color);
-		g.drawOval(0, 0, (int) this.width - 1, (int) this.height - 1);
+		g.drawOval(0, 0, (int) this.width - 1, (int) this.height - 1);*/
 		
 		// Drawing the image
 		this.renderEntityImage(g);

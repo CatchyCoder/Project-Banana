@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import javax.swing.ImageIcon;
 
 import projectbanana.main.Engine;
-import projectbanana.main.values.GeometryId;
 
 public abstract class BufferedEntity extends Entity {
 	
@@ -25,51 +24,36 @@ public abstract class BufferedEntity extends Entity {
 	private ArrayList<String> cachedPaths = new ArrayList<String>();
 	private ArrayList<BufferedImage> cachedImages = new ArrayList<BufferedImage>();
 	
-	private BufferedEntity(int x, int y, int ID) {
-		super(x, y, ID);
-		
-		this.startX = (int) this.x;
-		this.startY = (int) this.y;
-	}
-	
-	/*
-	 * DELETE CONSTRUCTOR BELOW LATER
-	 */
-	
-	public BufferedEntity(int x, int y, int width, int height, int ID) { 
-		this(x, y, ID);
-		
-		this.x -= (width / 2);
-		this.y -= (height / 2);
-		this.width = width;
-		this.height = height;
-		boundingRad = width / 2;
-		boundingWidth = width;
-		boundingHeight = height;
-		
-		image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-		image = resizeImage(image);
-		rotateImage();
-	}
+	private final boolean canRotate;
 	
 	public BufferedEntity(int x, int y, String imagePath, int ID, boolean canRotate) {
-		this(x, y, ID);
+		super(x, y, ID);
 		
+		// Determining whether the image can rotate, if false it will save a lot of calculations
+		this.canRotate = canRotate;
+		
+		// Loading the image, then retrieving the width and height
 		image = loadImage(imagePath);
 		this.width = boundingWidth = image.getWidth();
 		this.height = boundingHeight = image.getHeight();
+		
+		// Updating initial rotation of the entity
+		if(canRotate) rotateImage();
+		
+		// Setting the default bounding value for circle entities
 		boundingRad = width / 2;
-		boundingWidth = width;
-		boundingHeight = height;
+		
+		// Setting the x and y coordinates for the center of the entity
 		this.x -= (width / 2);
 		this.y -= (height / 2);
-		if(getGeometryId() == GeometryId.CIRCLE.getId()) boundingRad = image.getWidth() / 2;
-		rotateImage();
+		this.startX = x;
+		this.startY = y;
+		
 	}
 	
 	protected void rotateImage() {
-		System.out.println("Called");
-		affineTransform = AffineTransform.getRotateInstance(rotation, (int)(width / 2), (int)(height / 2));
+		System.out.println("rotateImage() called");
+		affineTransform = AffineTransform.getRotateInstance(getRotation(), (int)(width / 2), (int)(height / 2));
 		affineTransformOp = new AffineTransformOp(affineTransform, AffineTransformOp.TYPE_BILINEAR);
 	}
 	
@@ -92,7 +76,9 @@ public abstract class BufferedEntity extends Entity {
 			Image preImage = new ImageIcon(getClass().getResource(imagePath)).getImage();
 			BufferedImage image = new BufferedImage((int)(preImage.getWidth(null)), (int)(preImage.getHeight(null)), BufferedImage.TYPE_INT_ARGB);
 			image.getGraphics().drawImage(preImage, 0, 0, null);
-			image = resizeImage(image);
+			
+			// Only resize the image if it needs to be
+			if(canRotate) image = resizeImage(image);
 			
 			// Caching image
 			cachedPaths.add(imagePath);
@@ -109,7 +95,7 @@ public abstract class BufferedEntity extends Entity {
 	/**
 	 * Resizes the image, so that when the image is rotated it is not cut off.
 	 */
-	protected BufferedImage resizeImage(BufferedImage image) {
+	private BufferedImage resizeImage(BufferedImage image) {
 		System.out.println("Resized\n");
 		// Rounding the new size since it cannot be a double
 		int newSize = (int)(Math.hypot(image.getWidth(), image.getHeight()) + 0.5);
@@ -122,38 +108,44 @@ public abstract class BufferedEntity extends Entity {
 	}
 	
 	public void renderEntityImage(Graphics g) {
-		//rotateImage();
 		g = Engine.image.getGraphics();
-		g.drawImage(affineTransformOp.filter(image, null), (int) x, (int) y, null);
+		if(canRotate) g.drawImage(affineTransformOp.filter(image, null), (int) x, (int) y, null);
+		else g.drawImage(image, (int) x, (int) y, null);
 	}
 	
 	@Override
 	protected void respawn() {
 		super.respawn();
-		rotateImage();
+		if(canRotate) rotateImage();
 	}
 	
 	@Override
 	public void lookAt(Entity entity) {
 		super.lookAt(entity);
-		rotateImage();
+		if(canRotate) rotateImage();
 	}
 	
 	@Override
 	protected void turn(int dir, double maxVel, double force) throws Exception {
 		super.turn(dir, maxVel, force);
-		rotateImage();
+		if(canRotate) rotateImage();
 	}
 	
 	@Override
 	protected void applyRotVelDamping(double dampAmnt) {
 		super.applyRotVelDamping(dampAmnt);
-		rotateImage();
+		if(canRotate) rotateImage();
 	}
 	
 	@Override
 	protected void applyRotVelDamping() {
 		super.applyRotVelDamping();
-		rotateImage();
+		if(canRotate) rotateImage();
+	}
+	
+	@Override
+	public void setRotation(double value) {
+		super.setRotation(value);
+		if(canRotate) rotateImage();
 	}
 }

@@ -13,12 +13,6 @@ import userinterface.window.Window;
 public final class Engine implements Runnable {
 	
 	/* TODO:
-	 * * Make a new hierarchy :
-	 * 	VisibleObject (interface -- tick(), render())
-	 *  |
-	 *  |-- Entity
-	 * 		|
-	 * 		|-- BufferedEntity ( With true-false parameter fro choice of rotation)
 	 * * See if you can just use GeometryId.CIRCLE (without an integer get)
 	 * * Force ALL images to be loaded upon startup, somehow, some-way
 	 * 
@@ -45,7 +39,6 @@ public final class Engine implements Runnable {
 	private static final double SCALE = 1;
 	
 	public static double MAX_FPS = 60.0;
-	private static final double START_MAX_FPS = MAX_FPS;
 	
 	public static Window window = new Window((int) (SIZE.width * SCALE), (int) (SIZE.height * SCALE));
 	public static InputHandler gameInputHandler = new InputHandler(); // Have a separate Input just for the game
