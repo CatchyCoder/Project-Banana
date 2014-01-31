@@ -8,6 +8,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 
+import projectbanana.Core;
 import projectbanana.main.menu.MainMenu;
 
 public class InputHandler extends KeyAdapter implements MouseListener, MouseMotionListener, MouseWheelListener {
@@ -17,8 +18,7 @@ public class InputHandler extends KeyAdapter implements MouseListener, MouseMoti
 	
 	public void showCalledMenu() {
 		
-		Engine.stop();
-		Engine.window.setPage(new MainMenu(Engine.window, 0, 0, Engine.SIZE.width, Engine.SIZE.height, "/menu/"));
+		Core.ENGINE.stop();
 		
 		isMenuCalled = false;
 	}

@@ -3,6 +3,7 @@ package projectbanana.main.menu;
 import java.awt.Color;
 import java.awt.Font;
 
+import projectbanana.Core;
 import projectbanana.main.Engine;
 import userinterface.item.ButtonItem;
 import userinterface.item.InteractiveItem;
@@ -24,7 +25,7 @@ public class MainMenu extends Page {
 	
 	@Override
 	public void handleMousePress(InteractiveItem item) {
-		if(item.equals(startButton)) Engine.start();
+		if(item.equals(startButton)) Core.ENGINE.start();
 		else if(item.equals(optionsButton)) Engine.window.setPage(new OptionsMenu(this.getWindow(), 0, 0, this.getWidth(), this.getHeight(), this.getResourcePath()));
 		else if(item.equals(exitButton)) System.exit(0);
 	}

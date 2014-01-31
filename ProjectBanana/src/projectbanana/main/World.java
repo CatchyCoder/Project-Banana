@@ -11,12 +11,12 @@ import projectbanana.main.entity.*;
 
 public class World {
 	
-	private static final int SCALE = 2;
+	private static final double SCALE = 3;
 	public static final Dimension SIZE = new Dimension((int) (1000 * SCALE), (int) (1000 * SCALE));
 	
 	public static TrinityShipEntity player = new TrinityShipEntity(SIZE.width / 2, SIZE.height / 2);
 	//public static EnemyEntity[] enemies = new EnemyEntity[(int) (((SIZE.width * SIZE.height) / 100) * 0.01)];
-	public static EnemyEntity[] enemies = new EnemyEntity[200];
+	public static EnemyEntity[] enemies = new EnemyEntity[100];
 	private Point[] stars = new Point[(int) (((SIZE.width * SIZE.height) / 100) * 0.006)];
 	
 	// For efficiency statistics
@@ -69,7 +69,7 @@ public class World {
 	}
 	
 	private void renderBorder(Graphics g) {
-		int width = 17;
+		int width = 15;
 		
 		// This draws the border around the world
 		g.setColor(Color.DARK_GRAY);

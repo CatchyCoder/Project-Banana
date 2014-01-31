@@ -31,9 +31,8 @@ public abstract class PlayerEntity extends BufferedEntity {
 		super(x, y, PATH + imageName, GeometryId.CIRCLE.getId());
 		imagePath = PATH + imageName;
 		thrustImagePath = PATH + thrustImageName;
-		this.rotateImage();
 		this.loadImage(imagePath);
-		
+		this.rotateImage();
 		/*int dir = ((int) (Math.random() * 2) == 0 ? 1 : -1);
 		velX = (Math.random() * 15) * dir;
 		dir = ((int) (Math.random() * 2) == 0 ? 1 : -1);
@@ -79,13 +78,13 @@ public abstract class PlayerEntity extends BufferedEntity {
 				// If accelerating
 				if(Engine.gameInputHandler.isDown()) {
 					this.moveForward(thrust, speed);
-					loadImage(thrustImagePath);
+					image = loadImage(thrustImagePath);
 				}
 				
 				// If not accelerating
 				else {
 					if(vel != 0) this.applyVelDamping();
-					loadImage(imagePath);
+					image = loadImage(imagePath);
 				}
 				
 				this.applyForces();
@@ -98,7 +97,7 @@ public abstract class PlayerEntity extends BufferedEntity {
 	
 	@Override
 	public void render(Graphics g) {
-		g.drawImage(op.filter(image, null), (int) x, (int) y, null);
+		this.renderEntityImage(g);
 		
 		g.setColor(Color.GREEN);
 		int boundingRad = (int)this.boundingRad;

@@ -2,8 +2,6 @@ package projectbanana.main.menu;
 
 import java.awt.event.MouseEvent;
 
-import projectbanana.main.Engine;
-import projectbanana.main.values.MenuId;
 import userinterface.page.Page;
 import userinterface.window.Window;
 

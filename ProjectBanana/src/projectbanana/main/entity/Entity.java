@@ -1,16 +1,14 @@
 package projectbanana.main.entity;
 
-import java.awt.Graphics;
-
 import projectbanana.main.CollisionEvent;
 import projectbanana.main.Engine;
 import projectbanana.main.World;
 import projectbanana.main.values.GeometryId;
 import projectbanana.main.values.RotationId;
 
-public abstract class Entity {
+public abstract class Entity implements VisibleObject {
 	
-	protected final int GEOMETRY_ID;
+	private final int GEOMETRY_ID;
 	
 	protected double x, y;
 	protected int width, height;
@@ -22,17 +20,14 @@ public abstract class Entity {
 	
 	protected double vel = 0, velX = 0, velY = 0, accX = 0, accY = 0;
 	protected double rotVel = 0, rotAcc = 0, rotation = (3 * Math.PI) / 2; // Default rotation is facing up (North)
-	protected final double MIN_VEL = 0.01, MIN_ROT_VEL = Math.toRadians(0.01); // Slowest speed that is allowed before velocity goes to 0
+	protected final double MIN_VEL = 0.01, MIN_ROT_VEL = Math.toRadians(0.01); // Slowest speeds that are allowed before velocity goes to 0
 	protected double velDamping = 0.985, rotVelDamping = 0.92;
 	
-	public Entity(int x, int y, int GEOMETRY_ID) {
-		this.GEOMETRY_ID = GEOMETRY_ID;
+	public Entity(int x, int y, int ID) {
 		this.x = lastValidX = x;
 		this.y = lastValidY = y;
+		GEOMETRY_ID = ID;
 	}
-	
-	public abstract void tick();
-	public abstract void render(Graphics g);
 	
 	protected void applyForces() {
 		// Storing last valid location
@@ -206,8 +201,8 @@ public abstract class Entity {
 	}
 	
 	/**
-	 * Rotates the Entity with the required force until it is moving at the
-	 * required speed in the specified direction, and then maintains that speed if continually
+	 * Rotates the Entity with the specified force until it is moving at the
+	 * specified speed in the specified direction, and then maintains that speed if continually
 	 * called.
 	 * 
 	 * Note: force cannot be greater than speed, and dir can only be -1 (clockwise-clockwise) or 1 (counter), or and Exception 

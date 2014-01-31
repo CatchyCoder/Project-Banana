@@ -1,6 +1,5 @@
 package projectbanana.main.entity;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.geom.AffineTransform;
@@ -10,36 +9,64 @@ import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 
+import projectbanana.main.Engine;
 import projectbanana.main.values.GeometryId;
 
 public abstract class BufferedEntity extends Entity {
 	
+	// The image that every Entity uses to draw itself in the game
 	protected BufferedImage image;
 	
-	private AffineTransform at;
-	protected AffineTransformOp op;
+	// These are used for rotating the image (transformations)
+	private AffineTransform affineTransform;
+	private AffineTransformOp affineTransformOp;
 	
-	private Image preImage;
-	
+	// Used for caching images in order to save processing time later
 	private ArrayList<String> cachedPaths = new ArrayList<String>();
 	private ArrayList<BufferedImage> cachedImages = new ArrayList<BufferedImage>();
 	
-	public BufferedEntity(int x, int y, String imagePath, int ID) {
+	private BufferedEntity(int x, int y, int ID) {
 		super(x, y, ID);
-		loadImage(imagePath);
 		
-		this.width = boundingWidth = image.getWidth();
-		this.height = boundingHeight = image.getHeight();
-		if(getGeometryId() == GeometryId.CIRCLE.getId()) boundingRad = image.getWidth() / 2;
-		this.x -= (width / 2);
-		this.y -= (height / 2);
 		this.startX = (int) this.x;
 		this.startY = (int) this.y;
 	}
 	
+	public BufferedEntity(int x, int y, int width, int height, int ID) { 
+		this(x, y, ID);
+		
+		this.x -= (width / 2);
+		this.y -= (height / 2);
+		this.width = width;
+		this.height = height;
+		boundingRad = width / 2;
+		boundingWidth = width;
+		boundingHeight = height;
+		
+		image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		image = resizeImage(image);
+		rotateImage();
+	}
+	
+	public BufferedEntity(int x, int y, String imagePath, int ID) {
+		this(x, y, ID);
+		
+		image = loadImage(imagePath);
+		this.width = boundingWidth = image.getWidth();
+		this.height = boundingHeight = image.getHeight();
+		boundingRad = width / 2;
+		boundingWidth = width;
+		boundingHeight = height;
+		this.x -= (width / 2);
+		this.y -= (height / 2);
+		if(getGeometryId() == GeometryId.CIRCLE.getId()) boundingRad = image.getWidth() / 2;
+		rotateImage();
+	}
+	
 	protected void rotateImage() {
-		at = AffineTransform.getRotateInstance(rotation, (int)(width / 2), (int)(height / 2));
-		op = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+		System.out.println("Called");
+		affineTransform = AffineTransform.getRotateInstance(rotation, (int)(width / 2), (int)(height / 2));
+		affineTransformOp = new AffineTransformOp(affineTransform, AffineTransformOp.TYPE_BILINEAR);
 	}
 	
 	/**
@@ -47,61 +74,64 @@ public abstract class BufferedEntity extends Entity {
 	 * again later, it will not be reloaded.
 	 * @param imagePath
 	 */
-	protected void loadImage(String imagePath) {		
+	protected BufferedImage loadImage(String imagePath) {
+		// If this image has already been cached, don't load it again
 		for(int i = 0; i < cachedPaths.size(); i++) {
-			// If this image has already been cached, don't load it again
 			if(imagePath.equals(cachedPaths.get(i))) {
-				this.image = cachedImages.get(i);
-				return;
+				return cachedImages.get(i);
 			}
 		}
 		
 		// Otherwise, load & store the image for future use
 		try {
 			// Loading image
-			preImage = new ImageIcon(getClass().getResource(imagePath)).getImage();
-			image = new BufferedImage((int)(preImage.getWidth(null)), (int)(preImage.getHeight(null)), BufferedImage.TYPE_INT_ARGB);
+			Image preImage = new ImageIcon(getClass().getResource(imagePath)).getImage();
+			BufferedImage image = new BufferedImage((int)(preImage.getWidth(null)), (int)(preImage.getHeight(null)), BufferedImage.TYPE_INT_ARGB);
 			image.getGraphics().drawImage(preImage, 0, 0, null);
-			resizeImage();
+			image = resizeImage(image);
 			
 			// Caching image
 			cachedPaths.add(imagePath);
 			cachedImages.add(image);
+			return image;
 		}
 		catch(Exception e) {
-			System.out.format("\nError loading the image \"%s\"", imagePath);
 			e.printStackTrace();
-			
-			image = loadBackupImage();
+			System.out.format("\nError loading the image \"%s\"", imagePath);
 		}
+		return null;
 	}
 	
 	/**
 	 * Resizes the image, so that when the image is rotated it is not cut off.
 	 */
-	protected void resizeImage() {
-		BufferedImage oldImage = image;
-		// Rounding the new size, since it cannot be a double
-		int newSize = (int)(Math.sqrt(Math.pow(image.getWidth(), 2) + Math.pow(image.getHeight(), 2)) + 0.5);
-		image = new BufferedImage(newSize, newSize, BufferedImage.TYPE_INT_ARGB);
-		image.getGraphics().drawImage(oldImage, (int)(newSize / 2 - oldImage.getWidth() / 2), (int)(newSize / 2 - oldImage.getHeight() / 2), null);
+	protected BufferedImage resizeImage(BufferedImage image) {
+		System.out.println("Resized\n");
+		// Rounding the new size since it cannot be a double
+		int newSize = (int)(Math.hypot(image.getWidth(), image.getHeight()) + 0.5);
+		System.out.println(newSize);
+		BufferedImage newImage = new BufferedImage(newSize, newSize, BufferedImage.TYPE_INT_ARGB);
+		
+		// Drawing the old image in the middle of the new image
+		newImage.getGraphics().drawImage(image, (int)(newSize / 2 - image.getWidth() / 2), (int)(newSize / 2 - image.getHeight() / 2), null);
+		return newImage;
 	}
 	
-	protected BufferedImage loadBackupImage() {
-		BufferedImage backupImage = new BufferedImage(50, 50, BufferedImage.TYPE_INT_RGB);
-		Graphics g = backupImage.getGraphics();
-		g.setColor(Color.PINK);
-		g.fillRect(0, 0, backupImage.getWidth(), backupImage.getHeight());
-		g.setColor(Color.RED);
-		g.fillRect((int) (backupImage.getWidth() * 0.8), 0, (int) (backupImage.getWidth() * 0.2), backupImage.getHeight());
-		g.dispose();
-		
-		return backupImage;
+	public void renderEntityImage(Graphics g) {
+		//rotateImage();
+		g = Engine.image.getGraphics();
+		g.drawImage(affineTransformOp.filter(image, null), (int) x, (int) y, null);
 	}
 	
 	@Override
 	protected void respawn() {
 		super.respawn();
+		rotateImage();
+	}
+	
+	@Override
+	public void lookAt(Entity entity) {
+		super.lookAt(entity);
 		rotateImage();
 	}
 	
