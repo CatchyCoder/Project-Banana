@@ -9,7 +9,7 @@ import projectbanana.main.CollisionEvent;
 import projectbanana.main.Engine;
 import projectbanana.main.World;
 import projectbanana.main.util.Sound;
-import projectbanana.main.values.GeometryId;
+import projectbanana.main.values.Geometry;
 import projectbanana.main.values.RotationId;
 
 public abstract class PlayerEntity extends BufferedEntity {
@@ -28,7 +28,7 @@ public abstract class PlayerEntity extends BufferedEntity {
 	public ArrayList<Point> points = new ArrayList<Point>();
 	
 	public PlayerEntity(int x, int y, String imageName, String thrustImageName) {
-		super(x, y, PATH + imageName, GeometryId.CIRCLE.getId(), true);
+		super(x, y, PATH + imageName, Geometry.CIRCLE, true);
 		imagePath = PATH + imageName;
 		thrustImagePath = PATH + thrustImageName;
 		/*int dir = ((int) (Math.random() * 2) == 0 ? 1 : -1);

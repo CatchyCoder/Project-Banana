@@ -3,15 +3,14 @@ package projectbanana.main.entity;
 import projectbanana.main.CollisionEvent;
 import projectbanana.main.Engine;
 import projectbanana.main.World;
-import projectbanana.main.values.GeometryId;
+import projectbanana.main.values.Geometry;
 import projectbanana.main.values.RotationId;
 
 public abstract class Entity implements VisibleObject {
 	
-	private final int GEOMETRY_ID;
+	private final Geometry GEOMETRY;
 	
-	protected double x, y;
-	protected int width, height;
+	protected double x, y, width, height;
 	protected double boundingRad;
 	protected int boundingWidth, boundingHeight;
 	
@@ -24,10 +23,10 @@ public abstract class Entity implements VisibleObject {
 	protected final double MIN_VEL = 0.01, MIN_ROT_VEL = Math.toRadians(0.01); // Slowest speeds that are allowed before velocity goes to 0
 	protected double velDamping = 0.985, rotVelDamping = 0.92;
 	
-	public Entity(int x, int y, int ID) {
+	public Entity(int x, int y, Geometry geometry) {
 		this.x = lastValidX = x;
 		this.y = lastValidY = y;
-		GEOMETRY_ID = ID;
+		this.GEOMETRY = geometry;
 	}
 	
 	protected void applyForces() {
@@ -77,12 +76,12 @@ public abstract class Entity implements VisibleObject {
 		double yDis = getYDisFrom(entity);
 		
 		// If the Entities' shapes are different
-		if(getGeometryId() != entity.getGeometryId()) {
-			if(getGeometryId() == GeometryId.CIRCLE.getId()) return isCollidingWithCirRect(this, entity, range, xDis, yDis);
+		if(getGeometry() != entity.getGeometry()) {
+			if(getGeometry() == Geometry.CIRCLE) return isCollidingWithCirRect(this, entity, range, xDis, yDis);
 			else return isCollidingWithCirRect(entity, this, range, xDis, yDis);
 		}
 		// If both Entities are rectangles
-		else if(getGeometryId() == GeometryId.RECTANGLE.getId()) {
+		else if(getGeometry() == Geometry.RECTANGLE) {
 			if((Math.abs(xDis) > (boundingWidth / 2 + entity.boundingWidth / 2 + range)) || (Math.abs(yDis) > (boundingHeight / 2 + entity.boundingHeight / 2 + range)))
 				return new CollisionEvent(false, xDis, yDis);
 			return new CollisionEvent(true, xDis, yDis);
@@ -263,8 +262,8 @@ public abstract class Entity implements VisibleObject {
 		return (y + (height / 2));
 	}
 	
-	public int getGeometryId() {
-		return GEOMETRY_ID;
+	public Geometry getGeometry() {
+		return GEOMETRY;
 	}
 	
 	public double getRotation() {

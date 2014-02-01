@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import javax.swing.ImageIcon;
 
 import projectbanana.main.Engine;
+import projectbanana.main.values.Geometry;
 
 public abstract class BufferedEntity extends Entity {
 	
@@ -26,8 +27,8 @@ public abstract class BufferedEntity extends Entity {
 	
 	private final boolean canRotate;
 	
-	public BufferedEntity(int x, int y, String imagePath, int ID, boolean canRotate) {
-		super(x, y, ID);
+	public BufferedEntity(int x, int y, String imagePath, Geometry geometry, boolean canRotate) {
+		super(x, y, geometry);
 		
 		// Determining whether the image can rotate, if false it will save a lot of calculations
 		this.canRotate = canRotate;

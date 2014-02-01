@@ -13,11 +13,10 @@ import userinterface.window.Window;
 public final class Engine implements Runnable {
 	
 	/* TODO:
-	 * * See if you can just use GeometryId.CIRCLE (without an integer get)
+	 * * Clean up code
 	 * * Force ALL images to be loaded upon startup, somehow, some-way
 	 * 
-	 * * Try making width & height doubles && make the camera round --- see if it jitters still
-	 * * Make every entity draw itself on a bufferedimage, and then draw that image
+	 * * Make every entity draw itself on a bufferedimage, and then draw that image DONE
 	 * + Pause the game if it looses focus DONE
 	 * + Add a loading screen after play is pressed
 	 * * Change how collision handling works, have the World check for collision, and then
@@ -32,6 +31,12 @@ public final class Engine implements Runnable {
 	 * + Add collision detection with edge of world
 	 * 
 	 * Bugs:
+	 * * NOT EXACTLY A BUG.. but there is a slight chance that the menu will not pop put correctly
+	 * 		when stopping the game (if stop() gets called inside the isRunning() if statement in render())
+	 * - Sometimes, if load a menu while playing the game and your mouse is over the menu buttons,
+	 * 		the screen does not refresh
+	 * - Frame timing gets messed up once you stop and start the game again... is noticeable when you
+	 * 		stop and start the game several times at 1 frame a second
 	 * - Ship gets slightly bigger when on the left or top side of the map (Easier to see with circle drawn around it)
 	 */
 	
@@ -39,6 +44,8 @@ public final class Engine implements Runnable {
 	private static final double SCALE = 1;
 	
 	public static double MAX_FPS = 60.0;
+	public static double zoom = 2.0;
+	public static double load = 0.0;
 	
 	public static Window window = new Window((int) (SIZE.width * SCALE), (int) (SIZE.height * SCALE));
 	public static InputHandler gameInputHandler = new InputHandler(); // Have a separate Input just for the game
@@ -54,16 +61,16 @@ public final class Engine implements Runnable {
 	
 	public static boolean sound = false;
 	private static boolean isRunning = false;
-	public static boolean showPerformance = false;
+	public static boolean showPerformance = true;
 	
-	public static double zoom = 2.0;
-	public static double load = 0.0;
+	private Thread gameThread;
 	
 	public Engine() {
 		// Adding input for the actual game
 		window.addKeyListener(gameInputHandler);
 		window.addMouseWheelListener(gameInputHandler);
 		
+		// Displaying the main menu
 		window.addPage(new MainMenu(window, 0, 0, window.getWidth(), window.getHeight(), "/menu/"));
 		window.setVisible(true);
 	}
@@ -72,21 +79,18 @@ public final class Engine implements Runnable {
 		window.removeAllPages();
 		if(world != null) return;
 		
-		window.setPage(new LoadingPage(window, 0, 0, window.getSize().width, window.getSize().height, "/menu/")); // THIS NO WORK :(((
-		window.repaint();
+		// Displaying loading page, loading world, and then displaying the world
+		window.setPage(new LoadingPage(window, 0, 0, window.getSize().width, window.getSize().height, "/menu/"));
 		world = new World();
 		window.removeAllPages(); 
 	}
 	
 	public void start() {
-		//loadWorld();
-		try{
-			image = window.createVolatileImage(World.SIZE.width, World.SIZE.height);
-		}
-		catch(Exception e) {e.printStackTrace();}
+		image = window.createVolatileImage(World.SIZE.width, World.SIZE.height);
 		
 		isRunning = true;
-		new Thread(Core.ENGINE).start();
+		gameThread = new Thread(Core.ENGINE);
+		gameThread.start();
 	}
 	
 	public void stop() {
@@ -104,40 +108,39 @@ public final class Engine implements Runnable {
 	private void render() {
 		g = image.getGraphics();
 		renderWorld();
+				
+		double x = World.player.getCenterX();
+		double y = World.player.getCenterY();
 		
-		//World.player.getHUD().render(g);	*** Just put in PlayerEntity?? ***
+		int xSource = (int)(x - (SIZE.width / zoom));
+		int ySource = (int)(y - (SIZE.height / zoom));
+		int xSource2 = (int)(x + (SIZE.width / zoom));
+		int ySource2 = (int)(y + (SIZE.height / zoom));
 		
-		if(gameInputHandler.isMenuCalled()) gameInputHandler.showCalledMenu();
-		else {
-			double x = World.player.getCenterX();
-			double y = World.player.getCenterY();
-			
-			zoom = Math.abs(zoom);
-			int xSource = (int)(x - (SIZE.width / zoom));
-			int ySource = (int)(y - (SIZE.height / zoom));
-			int xSource2 = (int)(x + (SIZE.width / zoom));
-			int ySource2 = (int)(y + (SIZE.height / zoom));
-			
-			// If the user camera starts to reach the end of the map, stop the camera
-			if(xSource <= 0 || ySource <= 0 || xSource2 >= image.getWidth() || ySource2 >= image.getHeight()) {
-				if(xSource <= 0) {
-					xSource = 0;
-					xSource2 = (int) (SIZE.width * 2 / zoom);
-				}
-				if(ySource <= 0) {
-					ySource = 0;
-					ySource2 = (int) (SIZE.height * 2 / zoom);
-				}
-				if(xSource2 >= image.getWidth()) {
-					xSource2 = image.getWidth();
-					xSource = image.getWidth() - (int) (SIZE.width * 2 / zoom);
-				}
-				if(ySource2 >= image.getHeight()) {
-					ySource2 = image.getHeight();
-					ySource = image.getHeight() - (int) (SIZE.height * 2 / zoom);
-				}
+		// If the user camera starts to reach the end of the map, stop the camera
+		if(xSource <= 0 || ySource <= 0 || xSource2 >= image.getWidth() || ySource2 >= image.getHeight()) {
+			if(xSource <= 0) {
+				xSource = 0;
+				xSource2 = (int) (SIZE.width * 2 / zoom);
 			}
-			
+			if(ySource <= 0) {
+				ySource = 0;
+				ySource2 = (int) (SIZE.height * 2 / zoom);
+			}
+			if(xSource2 >= image.getWidth()) {
+				xSource2 = image.getWidth();
+				xSource = image.getWidth() - (int) (SIZE.width * 2 / zoom);
+			}
+			if(ySource2 >= image.getHeight()) {
+				ySource2 = image.getHeight();
+				ySource = image.getHeight() - (int) (SIZE.height * 2 / zoom);
+			}
+		}
+		
+		// Checking once more if the game is running, since the game can be
+		// stopped at any time (in the middle of a frame), we need to make sure
+		// we still want to draw on the screen.
+		if(isRunning) {
 			g = window.getGraphics();
 			g.drawImage(image, 0, 0, window.getWidth(), window.getHeight(), 
 					xSource, ySource, xSource2, ySource2, null);
@@ -157,9 +160,7 @@ public final class Engine implements Runnable {
 	
 	@Override
 	public void run() {
-		
 		loadWorld();
-		
 		
 		try {
 			// Calculating how much time for each frame, and multiplying it by 1 million to convert it to nanoseconds
@@ -218,6 +219,7 @@ public final class Engine implements Runnable {
 			}
 			
 			image.flush();
+			g.dispose();
 		}
 		catch(Exception e) {
 			System.err.println("Error running main loop:\n");

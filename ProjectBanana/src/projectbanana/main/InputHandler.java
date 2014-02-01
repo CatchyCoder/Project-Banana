@@ -11,17 +11,9 @@ import java.awt.event.MouseWheelListener;
 import projectbanana.Core;
 import projectbanana.main.menu.MainMenu;
 
-public class InputHandler extends KeyAdapter implements MouseListener, MouseMotionListener, MouseWheelListener {
+public class InputHandler extends KeyAdapter implements MouseWheelListener {
 	
 	private boolean isLeft, isRight, isUp, isDown, isEnter;
-	private boolean isMenuCalled;
-	
-	public void showCalledMenu() {
-		
-		Core.ENGINE.stop();
-		
-		isMenuCalled = false;
-	}
 	
 	@Override
 	public void keyPressed(KeyEvent pEvent) {
@@ -32,13 +24,8 @@ public class InputHandler extends KeyAdapter implements MouseListener, MouseMoti
 		if(src == KeyEvent.VK_D || src == KeyEvent.VK_RIGHT) isRight = true;
 		if(src == KeyEvent.VK_W || src == KeyEvent.VK_UP) isUp = true;
 		if(src == KeyEvent.VK_S || src == KeyEvent.VK_DOWN) isDown = true;
-		if(src == KeyEvent.VK_ENTER) isEnter = true;
-		
-		// Checking if a menu was called to showHandling Menu pop-ups
-		else if(src == KeyEvent.VK_ESCAPE) {
-			if(Engine.isRunning()) isMenuCalled = true;
-			else showCalledMenu();
-		}
+		else if(src == KeyEvent.VK_ENTER) isEnter = true;
+		else if(src == KeyEvent.VK_ESCAPE) Core.ENGINE.stop();
 	}
 	
 	@Override
@@ -50,41 +37,17 @@ public class InputHandler extends KeyAdapter implements MouseListener, MouseMoti
 		if(src == KeyEvent.VK_D || src == KeyEvent.VK_RIGHT) isRight = false;
 		if(src == KeyEvent.VK_W || src == KeyEvent.VK_UP) isUp = false;
 		if(src == KeyEvent.VK_S || src == KeyEvent.VK_DOWN) isDown = false;
-		if(src == KeyEvent.VK_ENTER) isEnter = false;
+		else if(src == KeyEvent.VK_ENTER) isEnter = false;
 	}
-	
-	@Override
-	public void mouseClicked(MouseEvent mClicked) {}
-
-	@Override
-	public void mouseEntered(MouseEvent mEntered) {}
-
-	@Override
-	public void mouseExited(MouseEvent mExited) {}
-
-	@Override
-	public void mousePressed(MouseEvent mPressed) {}
-
-	@Override
-	public void mouseReleased(MouseEvent mReleased) {}
-	
-	@Override
-	public void mouseDragged(MouseEvent mDragged) {}
-	
-	@Override
-	public void mouseMoved(MouseEvent mMoved) {}
 	
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent mWheel) {
-		double amount = 0.1;
+		double percentage = 0.2;
 		if(mWheel.isControlDown()) Engine.zoom = 2;
-		else if(mWheel.getWheelRotation() == 1) Engine.zoom -= amount;
-		else Engine.zoom += amount;
+		else if(mWheel.getWheelRotation() == 1) Engine.zoom *= 1 - percentage;
+		else Engine.zoom *= 1 + percentage;
+		
 		mWheel.consume();
-	}
-	
-	public boolean isMenuCalled() {
-		return isMenuCalled;
 	}
 	
 	public boolean isLeft() {

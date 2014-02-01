@@ -9,22 +9,24 @@ import projectbanana.main.CollisionEvent;
 import projectbanana.main.Engine;
 import projectbanana.main.World;
 import projectbanana.main.util.Sound;
-import projectbanana.main.values.GeometryId;
+import projectbanana.main.values.Geometry;
 
 public class EnemyEntity extends BufferedEntity {
 		
 	private double homingSpeed = 0.25;
 	private double fidgetSpeed = 0.05;
-	private double range = 100;
+	private double range = 200;
 	
 	private int renderCount = 0;
 	
 	private Color color = new Color((int) (Math.random() * 210) + 45, 0, 0);
 		
 	public EnemyEntity(int x, int y) {
-		super(x, y, "/spaceships/SpaceShipSmallNew.png", GeometryId.CIRCLE.getId(), true);
+		super(x, y, "/spaceships/SpaceShipSmallNew.png", Geometry.CIRCLE, true);
 		velDamping = 0.99;
-		
+		boundingRad *= 0.5;
+		Graphics g = Engine.image.getGraphics();
+		//g.drawRect((int) x, (int) y, width, height);
 		/*Graphics g = image.getGraphics();
 		g.setColor(Color.DARK_GRAY);
 		g.fillOval(0, 0, (int) this.width - 1, (int) this.height - 1);
