@@ -16,24 +16,13 @@ public class EnemyEntity extends BufferedEntity {
 	private double homingSpeed = 0.25;
 	private double fidgetSpeed = 0.05;
 	private double range = 200;
-	
-	private int renderCount = 0;
-	
-	private Color color = new Color((int) (Math.random() * 210) + 45, 0, 0);
+		
+	private Color color = new Color((int) (Math.random() * 211) + 45, 0, 0);
 		
 	public EnemyEntity(int x, int y) {
 		super(x, y, "/spaceships/SpaceShipSmallNew.png", Geometry.CIRCLE, false);
 		velDamping = 0.99;
 		boundingRad *= 0.5;
-		Graphics g = Engine.image.getGraphics();
-		//g.drawRect((int) x, (int) y, width, height);
-		/*Graphics g = image.getGraphics();
-		g.setColor(Color.DARK_GRAY);
-		g.fillOval(0, 0, (int) this.width - 1, (int) this.height - 1);
-		g.setColor(color);
-		g.drawOval(0, 0, (int) this.width - 1, (int) this.height - 1);
-		g.setColor(Color.GREEN);
-		g.drawRect(0, 0, width, height);*/
 	}
 	
 	@Override
@@ -61,12 +50,11 @@ public class EnemyEntity extends BufferedEntity {
 		
 		
 		double sqrDisFromPlayer = getSqrDisFrom(World.player);
-		//if(this.equals(World.enemys[0])) System.out.format("X Dis: %s, Y Dis: %s, Total Dis: %s\n", getXDisFrom(World.player), getYDisFrom(World.player), disFromPlayer);
 		
 		// If entity is in range of Player
 		if(this.inRange(World.player, range)) {
 			this.lookAt(World.player);
-			setRotation(getRotation() + Math.PI);
+			setRotation(getRotation() + Math.PI); // Looking in the opposite direction of the player
 			
 			this.accForward(homingSpeed);
 			
@@ -91,19 +79,6 @@ public class EnemyEntity extends BufferedEntity {
 		
 	@Override
 	public void render(Graphics g) {
-		// Randomly change the red hue
-		if(renderCount >= 10) {
-			color = new Color((int) (Math.random() * 211) + 45, 0, 0);
-			renderCount = 0;
-		}
-		
-		/*// Draw CHANGES on image
-		g = image.getGraphics();
-		g.setColor(color);
-		g.drawOval(0, 0, (int) this.width - 1, (int) this.height - 1);*/
-		
-		// Drawing the image
 		this.renderEntityImage(g);
-		renderCount++;
 	}
 }

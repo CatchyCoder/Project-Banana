@@ -37,17 +37,17 @@ public class World {
 	
 	public void render(Graphics g) {
 		renderBackground(g);
-		renderParticles(g);
+		renderStars(g);
 		
 		for(EnemyEntity enemy : enemies) if(enemy.isOnScreen()) enemy.render(g); // REAL
 		//for(EnemyEntity enemy : enemies) enemy.render(g);
 		player.render(g);
 		
-		// Rendering points
+		/*// Rendering points
 		g.setColor(Color.GREEN);
 		for(Point point : player.points) {
 			g.drawLine(point.x, point.y, point.x, point.y);
-		}
+		}*/
 		
 		renderBorder(g);
 		
@@ -60,7 +60,7 @@ public class World {
 		g.fillRect(0, 0, SIZE.width, SIZE.height);
 	}
 	
-	private void renderParticles(Graphics g) {
+	private void renderStars(Graphics g) {
 		g.setColor(Color.WHITE);
 		int size = 1;
 		

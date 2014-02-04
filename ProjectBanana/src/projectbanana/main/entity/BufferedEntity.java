@@ -30,7 +30,7 @@ public abstract class BufferedEntity extends Entity {
 	public BufferedEntity(int x, int y, String imagePath, Geometry geometry, boolean canRotate) {
 		super(x, y, geometry);
 		
-		// Determining whether the image can rotate, if false it will save a lot of calculations
+		// Determining whether the image can rotate, if false calculation time will be saved
 		this.canRotate = canRotate;
 		
 		// Loading the image, then retrieving the width and height
