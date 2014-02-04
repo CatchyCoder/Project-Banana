@@ -13,12 +13,16 @@ import userinterface.window.Window;
 public final class Engine implements Runnable {
 	
 	/* TODO:
-	 * * Clean up code
+	 * 
+	 * 
+	 * * FINISH cleaning up code
+	 * 
+	 * 
+	 * 
+	 * 
 	 * * Force ALL images to be loaded upon startup, somehow, some-way
 	 * 
-	 * * Make every entity draw itself on a bufferedimage, and then draw that image DONE
-	 * + Pause the game if it looses focus DONE
-	 * + Add a loading screen after play is pressed
+	 * * Maybe move all game settings (that can be changed) to a separate class
 	 * * Change how collision handling works, have the World check for collision, and then
 	 * 		notify the objects if & what they are colliding with (calls a method all Entities
 	 * 		have specifically for collision "colliding(Entity)")
@@ -29,6 +33,11 @@ public final class Engine implements Runnable {
 	 * * Only render stars on screen
 	 * * Base direction of movement off of rotation for ALL objects -- will help with collision detection later (linear algebra)
 	 * + Add collision detection with edge of world
+	 * 
+	 * Finished:
+	 * * Make every entity draw itself on a buffered image, and then draw that image DONE
+	 * + Pause the game if it looses focus DONE
+	 * + Add a loading screen after play is pressed
 	 * 
 	 * Bugs:
 	 * * NOT EXACTLY A BUG.. but there is a slight chance that the menu will not pop put correctly
@@ -47,8 +56,10 @@ public final class Engine implements Runnable {
 	public static double zoom = 2.0;
 	public static double load = 0.0;
 	
+	public static int cameraX, cameraY, cameraX2, cameraY2;
+	
 	public static Window window = new Window((int) (SIZE.width * SCALE), (int) (SIZE.height * SCALE));
-	public static InputHandler gameInputHandler = new InputHandler(); // Have a separate Input just for the game
+	public static InputHandler gameInputHandler = new InputHandler(); // This is a separate input, just for the game itself
 	public static World world;
 	
 	public static VolatileImage image;
@@ -62,9 +73,7 @@ public final class Engine implements Runnable {
 	public static boolean sound = false;
 	private static boolean isRunning = false;
 	public static boolean showPerformance = true;
-	
-	private Thread gameThread;
-	
+		
 	public Engine() {
 		// Adding input for the actual game
 		window.addKeyListener(gameInputHandler);
@@ -89,8 +98,7 @@ public final class Engine implements Runnable {
 		image = window.createVolatileImage(World.SIZE.width, World.SIZE.height);
 		
 		isRunning = true;
-		gameThread = new Thread(Core.ENGINE);
-		gameThread.start();
+		new Thread(Core.ENGINE).start();
 	}
 	
 	public void stop() {
@@ -108,32 +116,33 @@ public final class Engine implements Runnable {
 	private void render() {
 		g = image.getGraphics();
 		renderWorld();
-				
+		
+		// Drawing a specific part of the world (the camera) below
 		double x = World.player.getCenterX();
 		double y = World.player.getCenterY();
 		
-		int xSource = (int)(x - (SIZE.width / zoom));
-		int ySource = (int)(y - (SIZE.height / zoom));
-		int xSource2 = (int)(x + (SIZE.width / zoom));
-		int ySource2 = (int)(y + (SIZE.height / zoom));
+		cameraX = (int)(x - (SIZE.width / zoom));
+		cameraY = (int)(y - (SIZE.height / zoom));
+		cameraX2 = (int)(x + (SIZE.width / zoom));
+		cameraY2 = (int)(y + (SIZE.height / zoom));
 		
 		// If the user camera starts to reach the end of the map, stop the camera
-		if(xSource <= 0 || ySource <= 0 || xSource2 >= image.getWidth() || ySource2 >= image.getHeight()) {
-			if(xSource <= 0) {
-				xSource = 0;
-				xSource2 = (int) (SIZE.width * 2 / zoom);
+		if(cameraX <= 0 || cameraY <= 0 || cameraX2 >= image.getWidth() || cameraY2 >= image.getHeight()) {
+			if(cameraX <= 0) {
+				cameraX = 0;
+				cameraX2 = (int) (SIZE.width * 2 / zoom);
 			}
-			if(ySource <= 0) {
-				ySource = 0;
-				ySource2 = (int) (SIZE.height * 2 / zoom);
+			if(cameraY <= 0) {
+				cameraY = 0;
+				cameraY2 = (int) (SIZE.height * 2 / zoom);
 			}
-			if(xSource2 >= image.getWidth()) {
-				xSource2 = image.getWidth();
-				xSource = image.getWidth() - (int) (SIZE.width * 2 / zoom);
+			if(cameraX2 >= image.getWidth()) {
+				cameraX2 = image.getWidth();
+				cameraX = image.getWidth() - (int) (SIZE.width * 2 / zoom);
 			}
-			if(ySource2 >= image.getHeight()) {
-				ySource2 = image.getHeight();
-				ySource = image.getHeight() - (int) (SIZE.height * 2 / zoom);
+			if(cameraY2 >= image.getHeight()) {
+				cameraY2 = image.getHeight();
+				cameraY = image.getHeight() - (int) (SIZE.height * 2 / zoom);
 			}
 		}
 		
@@ -143,7 +152,7 @@ public final class Engine implements Runnable {
 		if(isRunning) {
 			g = window.getGraphics();
 			g.drawImage(image, 0, 0, window.getWidth(), window.getHeight(), 
-					xSource, ySource, xSource2, ySource2, null);
+					cameraX, cameraY, cameraX2, cameraY2, null);
 		}
 		
 		g.dispose();
@@ -189,15 +198,14 @@ public final class Engine implements Runnable {
 					spareTime = System.nanoTime() - spareTime;
 					frames++;
 					load = (calcTime * 100) / FRAME_DELAY;
-					System.out.format("  [Frame %2s] Calc Time: %2.5s   |   Spare Time: %2.5s   |   %2.5s%s Load.\n", frames, calcTime / 1000000.0, spareTime / 1000000.0, load, '%');
+					System.out.format("  [Frame %3s] Calc Time: %2.5s   |   Spare Time: %2.5s   |   %2.5s%s Load.\n", frames, calcTime / 1000000.0, spareTime / 1000000.0, load, '%');
 					frameTime = System.nanoTime();
 					
 					// Calculating FPS
 					if((System.nanoTime() - lastTime) >= (1000 * 1000000)) {
 						sec++;
 						System.out.println(sec + ".) " + frames + " fps");
-						if(spareTime > 0 && frames < MAX_FPS - 2) System.err.println("! === WARNING === ! --> There is spare time, yet max fps is not reached.");
-						System.out.println();
+						System.out.println("Beginning FPS count:");
 						frames = 0;
 						lastTime = System.nanoTime();
 					}

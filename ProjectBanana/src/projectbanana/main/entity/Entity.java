@@ -50,12 +50,24 @@ public abstract class Entity implements VisibleObject {
 	}
 	
 	public boolean isOnScreen() {
-		int screenWidth = (int) Engine.SIZE.width;
-		int screenHeight = (int) Engine.SIZE.height;
+		//int screenWidth = (int) Engine.SIZE.width;
+		//int screenHeight = (int) Engine.SIZE.height;
 		
-		if(Math.abs(getCenterX() - World.player.getCenterX()) <= ((width + screenWidth) / 2) &&
+		int cameraCenterX = Engine.cameraX - Engine.cameraX2;
+		int cameraCenterY = Engine.cameraY - Engine.cameraY2;
+		
+		// Don't need one for Y since the camera is a square
+		int renderDistance = Engine.cameraX - cameraCenterX;
+		
+		if(Math.abs(getCenterX() - cameraCenterX) <= renderDistance + width / 2 &&
+			Math.abs(getCenterY() - cameraCenterY) <= renderDistance + height / 2) {
+			return false;
+		}
+		return true;
+		
+		/*if(Math.abs(getCenterX() - World.player.getCenterX()) <= ((width + screenWidth) / 2) &&
 				Math.abs(getCenterY() - World.player.getCenterY()) <= ((height + screenHeight) / 2)) return true;
-		return false;
+		return false;*/
 	}
 	
 	public CollisionEvent isCollidingWith(Entity entity) {

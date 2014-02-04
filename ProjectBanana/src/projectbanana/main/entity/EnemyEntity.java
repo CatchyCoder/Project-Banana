@@ -22,7 +22,7 @@ public class EnemyEntity extends BufferedEntity {
 	private Color color = new Color((int) (Math.random() * 210) + 45, 0, 0);
 		
 	public EnemyEntity(int x, int y) {
-		super(x, y, "/spaceships/SpaceShipSmallNew.png", Geometry.CIRCLE, true);
+		super(x, y, "/spaceships/SpaceShipSmallNew.png", Geometry.CIRCLE, false);
 		velDamping = 0.99;
 		boundingRad *= 0.5;
 		Graphics g = Engine.image.getGraphics();
