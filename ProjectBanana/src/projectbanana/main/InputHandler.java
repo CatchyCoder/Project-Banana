@@ -2,14 +2,10 @@ package projectbanana.main;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 
 import projectbanana.Core;
-import projectbanana.main.menu.MainMenu;
 
 public class InputHandler extends KeyAdapter implements MouseWheelListener {
 	

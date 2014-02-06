@@ -1,23 +1,19 @@
 package projectbanana.main.entity;
 
-import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import java.awt.image.VolatileImage;
 
 import projectbanana.main.CollisionEvent;
-import projectbanana.main.Engine;
 import projectbanana.main.World;
 import projectbanana.main.util.Sound;
 import projectbanana.main.values.Geometry;
 
 public class EnemyEntity extends BufferedEntity {
-		
+	
 	private double homingSpeed = 0.25;
 	private double fidgetSpeed = 0.05;
 	private double range = 200;
 		
-	private Color color = new Color((int) (Math.random() * 211) + 45, 0, 0);
+	//private Color color = new Color((int) (Math.random() * 211) + 45, 0, 0);
 		
 	public EnemyEntity(int x, int y) {
 		super(x, y, "/spaceships/SpaceShipSmallNew.png", Geometry.CIRCLE, false);
@@ -56,7 +52,7 @@ public class EnemyEntity extends BufferedEntity {
 			this.lookAt(World.player);
 			setRotation(getRotation() + Math.PI); // Looking in the opposite direction of the player
 			
-			this.accForward(homingSpeed);
+			//this.accForward(homingSpeed);
 			
 			// If close to player, damp the velocity
 			if(sqrDisFromPlayer <= Math.pow(World.player.width, 2)) this.applyVelDamping();

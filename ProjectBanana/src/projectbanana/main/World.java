@@ -11,12 +11,12 @@ import projectbanana.main.entity.*;
 
 public class World {
 	
-	private static final double SCALE = 3;
+	private static final double SCALE = 3; // 3 is normal
 	public static final Dimension SIZE = new Dimension((int) (1000 * SCALE), (int) (1000 * SCALE));
 	
 	public static TrinityShipEntity player = new TrinityShipEntity(SIZE.width / 2, SIZE.height / 2);
 	//public static EnemyEntity[] enemies = new EnemyEntity[(int) (((SIZE.width * SIZE.height) / 100) * 0.01)];
-	public static EnemyEntity[] enemies = new EnemyEntity[25];
+	public static EnemyEntity[] enemies = new EnemyEntity[20];
 	private Point[] stars = new Point[(int) (((SIZE.width * SIZE.height) / 100) * 0.006)];
 	
 	// For efficiency statistics
@@ -50,7 +50,7 @@ public class World {
 		}*/
 		
 		renderBorder(g);
-		
+		player.renderHUD(g);
 		if(Engine.showPerformance) renderPerformance(g);
 	}
 	
@@ -87,7 +87,9 @@ public class World {
 		for(Integer load : loads) avg += load;
 		avg /= loads.size();
 		g.setColor(Color.GREEN);
-		g.setFont(new Font("Arial", Font.BOLD, 20));
+		int font = (int) (20 / Engine.zoom * 2);
+		if(font < 20) g.setFont(new Font("Arial", Font.PLAIN, 20));
+		else g.setFont(new Font("Arial", Font.PLAIN, font));
 		g.drawString(String.valueOf(avg) + "% Load", (int) player.getX() + 100, (int) player.getY());
 	}
 }

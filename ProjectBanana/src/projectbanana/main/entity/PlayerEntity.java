@@ -3,6 +3,7 @@ package projectbanana.main.entity;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.image.VolatileImage;
 import java.util.ArrayList;
 
 import projectbanana.main.CollisionEvent;
@@ -19,7 +20,7 @@ public abstract class PlayerEntity extends BufferedEntity {
 	protected double rotSpeed = 0.075;
 	protected double rotThrust = rotSpeed * 0.05;
 	
-	//private final HUD HUD = new HUD();
+	protected double health = 100.0;
 	
 	private static final String PATH = "/spaceships/";
 	private final String imagePath;
@@ -27,20 +28,16 @@ public abstract class PlayerEntity extends BufferedEntity {
 	
 	public ArrayList<Point> points = new ArrayList<Point>();
 	
+	//private VolatileImage HUD = Engine.window.createVolatileImage(Engine.SIZE.width, Engine.SIZE.height);
+	
 	public PlayerEntity(int x, int y, String imageName, String thrustImageName) {
 		super(x, y, PATH + imageName, Geometry.CIRCLE, true);
 		imagePath = PATH + imageName;
 		thrustImagePath = PATH + thrustImageName;
-		/*int dir = ((int) (Math.random() * 2) == 0 ? 1 : -1);
-		velX = (Math.random() * 15) * dir;
-		dir = ((int) (Math.random() * 2) == 0 ? 1 : -1);
-		velY = (Math.random() * 15) * dir;*/
-		//velDamping = .8;
 	}
 	
 	@Override
 	public void tick() {
-		//System.out.println(x + " " + y);
 		try {
 			for(Entity entity : World.enemies) {
 				CollisionEvent event = this.isCollidingWith(entity);
@@ -52,6 +49,7 @@ public abstract class PlayerEntity extends BufferedEntity {
 					y = lastValidY;
 					Sound.BUMP.play();
 					points.add(new Point((int)entity.getCenterX(), (int)entity.getCenterY()));
+					health -= 10;
 				}
 			}
 			
@@ -96,10 +94,14 @@ public abstract class PlayerEntity extends BufferedEntity {
 	@Override
 	public void render(Graphics g) {
 		this.renderEntityImage(g);
-		
-		g.setColor(Color.GREEN);
-		int boundingRad = (int)this.boundingRad;
-		//if(this.getGeometryId() == GeometryId.CIRCLE.getId()) g.drawOval((int) this.x + (width / boundingRad), (int) this.y + (width / boundingRad), (int) boundingRad, (int) boundingRad);
-		//else g.drawRect((int) this.x + boundingWidth / 2, (int) this.y + boundingHeight / 2, (int) boundingWidth, (int) boundingHeight);
+	}
+	
+	public void renderHUD(Graphics g) {
+		// Rendering the players HUD
+		int value = (int) (Math.min(this.vel / speed, 1) * 255);
+		double percentage = 0.25;
+		g.setColor(new Color((int)(value * percentage), (int)(value * percentage), value));
+		int gaugeHeight = (int) (200 * health / 100);
+		g.fillRect(Engine.cameraX, Engine.cameraY2, 50, (int) -(this.vel * 10));
 	}
 }

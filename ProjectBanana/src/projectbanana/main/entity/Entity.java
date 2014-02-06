@@ -50,24 +50,21 @@ public abstract class Entity implements VisibleObject {
 	}
 	
 	public boolean isOnScreen() {
-		//int screenWidth = (int) Engine.SIZE.width;
-		//int screenHeight = (int) Engine.SIZE.height;
+		// Don't need camera height since the camera is a square
+		int cameraSize = Engine.cameraX2 - Engine.cameraX;
+		// The amount of pixels shown from from the player until the camera ends
+		int renderDistance = cameraSize / 2; 
 		
-		int cameraCenterX = Engine.cameraX - Engine.cameraX2;
-		int cameraCenterY = Engine.cameraY - Engine.cameraY2;
+		// Finding the center of the camera
+		int cameraCenterY = Engine.cameraY + renderDistance;
+		int cameraCenterX = Engine.cameraX + renderDistance;
 		
-		// Don't need one for Y since the camera is a square
-		int renderDistance = Engine.cameraX - cameraCenterX;
+		// The distances (X and Y) from the camera to the Entity
+		double xDisFromCamera = Math.abs(cameraCenterX - getCenterX()) - (width / 2 + renderDistance);
+		double yDisFromCamera = Math.abs(cameraCenterY - getCenterY()) - (height / 2 + renderDistance);
 		
-		if(Math.abs(getCenterX() - cameraCenterX) <= renderDistance + width / 2 &&
-			Math.abs(getCenterY() - cameraCenterY) <= renderDistance + height / 2) {
-			return false;
-		}
-		return true;
-		
-		/*if(Math.abs(getCenterX() - World.player.getCenterX()) <= ((width + screenWidth) / 2) &&
-				Math.abs(getCenterY() - World.player.getCenterY()) <= ((height + screenHeight) / 2)) return true;
-		return false;*/
+		if(xDisFromCamera < 0 && yDisFromCamera < 0) return true;
+		return false;
 	}
 	
 	public CollisionEvent isCollidingWith(Entity entity) {
@@ -180,6 +177,12 @@ public abstract class Entity implements VisibleObject {
 		
 		accForward(force);
 		if(vel > maxVel) {
+			// Making sure that the individual velocities are not greater
+			// than velocity, otherwise velocity will go past max velocity.
+			//System.out.println("x:" + velX + "\ty:" + velY);
+			//if(velX > vel) velX = maxVel;
+			//if(velY > vel) velY = maxVel;
+			
 			// Capping off the velocity
 			velX = (velX / vel) * maxVel;
 			velY = (velY / vel) * maxVel;

@@ -13,13 +13,7 @@ import userinterface.window.Window;
 public final class Engine implements Runnable {
 	
 	/* TODO:
-	 * 
-	 * 
-	 * * FINISH cleaning up code
-	 * 
-	 * 
-	 * 
-	 * 
+	 * * Fix the physics engine.. there are bugs, max velocity is a little off, big job :/
 	 * * Force ALL images to be loaded upon startup, somehow, some-way
 	 * 
 	 * * Maybe move all game settings (that can be changed) to a separate class
@@ -27,7 +21,6 @@ public final class Engine implements Runnable {
 	 * 		notify the objects if & what they are colliding with (calls a method all Entities
 	 * 		have specifically for collision "colliding(Entity)")
 	 * * Manage FPS in Options Menu (Use 2 ButtonItems and 1 TextItem)
-	 * * Change the isOnScreen() method to work like the collision detection (WILL FIX EDGE OF WORLD BUG)
 	 * + Add a HUD
 	 * * Use (velX, y) || (x, velY) in fidgetSpeed for Enemy Entities for cool effects
 	 * * Only render stars on screen
@@ -35,9 +28,12 @@ public final class Engine implements Runnable {
 	 * + Add collision detection with edge of world
 	 * 
 	 * Finished:
-	 * * Make every entity draw itself on a buffered image, and then draw that image DONE
-	 * + Pause the game if it looses focus DONE
+	 * * Cleaned up code
+	 * * Make every entity draw itself on a buffered image, and then draw that image
+	 * + Pause the game if it looses focus
 	 * + Add a loading screen after play is pressed
+	 * * Now only objects on the screen are rendered, isOnScreen() is not based off of player
+	 * + Implemented a player HUD
 	 * 
 	 * Bugs:
 	 * * NOT EXACTLY A BUG.. but there is a slight chance that the menu will not pop put correctly
@@ -72,7 +68,7 @@ public final class Engine implements Runnable {
 	
 	public static boolean sound = false;
 	private static boolean isRunning = false;
-	public static boolean showPerformance = true;
+	public static boolean showPerformance = false;
 		
 	public Engine() {
 		// Adding input for the actual game
@@ -114,8 +110,7 @@ public final class Engine implements Runnable {
 	}
 	
 	private void render() {
-		g = image.getGraphics();
-		renderWorld();
+		
 		
 		// Drawing a specific part of the world (the camera) below
 		double x = World.player.getCenterX();
@@ -145,6 +140,10 @@ public final class Engine implements Runnable {
 				cameraY = image.getHeight() - (int) (SIZE.height * 2 / zoom);
 			}
 		}
+		
+		// After the camera is in place, render the world
+		g = image.getGraphics();
+		renderWorld();
 		
 		// Checking once more if the game is running, since the game can be
 		// stopped at any time (in the middle of a frame), we need to make sure

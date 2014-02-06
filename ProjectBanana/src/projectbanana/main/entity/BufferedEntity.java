@@ -53,14 +53,13 @@ public abstract class BufferedEntity extends Entity {
 	}
 	
 	protected void rotateImage() {
-		System.out.println("rotateImage() called");
 		affineTransform = AffineTransform.getRotateInstance(getRotation(), (int)(width / 2), (int)(height / 2));
 		affineTransformOp = new AffineTransformOp(affineTransform, AffineTransformOp.TYPE_BILINEAR);
 	}
 	
 	/**
 	 * Loads the specified image and then caches the image so that if it is called to be loaded
-	 * again later, it will not be reloaded.
+	 * again later it will not be reloaded.
 	 * @param imagePath
 	 */
 	protected BufferedImage loadImage(String imagePath) {
@@ -97,10 +96,8 @@ public abstract class BufferedEntity extends Entity {
 	 * Resizes the image, so that when the image is rotated it is not cut off.
 	 */
 	private BufferedImage resizeImage(BufferedImage image) {
-		System.out.println("Resized\n");
 		// Rounding the new size since it cannot be a double
 		int newSize = (int)(Math.hypot(image.getWidth(), image.getHeight()) + 0.5);
-		System.out.println(newSize);
 		BufferedImage newImage = new BufferedImage(newSize, newSize, BufferedImage.TYPE_INT_ARGB);
 		
 		// Drawing the old image in the middle of the new image
@@ -108,12 +105,21 @@ public abstract class BufferedEntity extends Entity {
 		return newImage;
 	}
 	
+	/**
+	 * Renders the Entity's volatile image.
+	 * 
+	 * @param g the graphics object
+	 */
 	public void renderEntityImage(Graphics g) {
 		g = Engine.image.getGraphics();
 		if(canRotate) g.drawImage(affineTransformOp.filter(image, null), (int) x, (int) y, null);
 		else g.drawImage(image, (int) x, (int) y, null);
 	}
 	
+	/**
+	 * Moves the Entity to the point where it was originally spawned at.
+	 * If the Entity can rotate, then the Entity's image will be rotated.
+	 */
 	@Override
 	protected void respawn() {
 		super.respawn();
