@@ -2,7 +2,6 @@ package projectbanana.main.entity;
 
 import projectbanana.main.CollisionEvent;
 import projectbanana.main.Engine;
-import projectbanana.main.World;
 import projectbanana.main.values.Geometry;
 import projectbanana.main.values.RotationId;
 

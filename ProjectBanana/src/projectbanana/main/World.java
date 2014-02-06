@@ -19,7 +19,7 @@ public class World {
 	public static TrinityShipEntity player = new TrinityShipEntity((int) homeBase.getCenterX(), (int) homeBase.getCenterY() + 200);
 	//public static EnemyEntity[] enemies = new EnemyEntity[(int) (((SIZE.width * SIZE.height) / 100) * 0.01)];
 	public static EnemyEntity[] enemies = new EnemyEntity[0];
-	public static TestAI testAI = new TestAI((int) homeBase.getCenterX() + 200, (int) homeBase.getCenterY() + 200);
+	public static TestAI[] AIs = new TestAI[10];
 	private Point[] stars = new Point[(int) (((SIZE.width * SIZE.height) / 100) * 0.006)];
 	public static ArrayList<Bullet> bullets = new ArrayList<Bullet>();
 	
@@ -32,10 +32,13 @@ public class World {
 		
 		// Loading enemies
 		for(int x = 0; x < enemies.length; x++) enemies[x] = new EnemyEntity((int) (Math.random() * SIZE.width), (int) (Math.random() * SIZE.height));
+		
+		// Loading AI
+		for(int x = 0; x < AIs.length; x++) AIs[x] = new TestAI((int) (Math.random() * SIZE.width), (int) (Math.random() * SIZE.height));
 	}
 	
 	public void tick() {
-		testAI.tick();
+		for(TestAI ai : AIs)ai.tick();
 		homeBase.tick();
 		player.tick();
 		for(Bullet bullet : bullets) bullet.tick();
@@ -49,7 +52,7 @@ public class World {
 		for(Bullet bullet : bullets) if(bullet.isOnScreen()) bullet.render(g);
 		if(homeBase.isOnScreen()) homeBase.render(g);
 		for(EnemyEntity enemy : enemies) if(enemy.isOnScreen()) enemy.render(g);
-		testAI.render(g);
+		for(TestAI ai : AIs)ai.render(g);
 		player.render(g);
 		
 		/*// Rendering points
