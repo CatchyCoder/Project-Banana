@@ -27,6 +27,9 @@ public final class Engine implements Runnable {
 	 * * Base direction of movement off of rotation for ALL objects -- will help with collision detection later (linear algebra)
 	 * + Add collision detection with edge of world
 	 * 
+	 * Finished:
+	 * * Bullets are now more like bullets
+	 * 
 	 * Bugs:
 	 * * NOT EXACTLY A BUG.. but there is a slight chance that the menu will not pop put correctly
 	 * 		when stopping the game (if stop() gets called inside the isRunning() if statement in render())

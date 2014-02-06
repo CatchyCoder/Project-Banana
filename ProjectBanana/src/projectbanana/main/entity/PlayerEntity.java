@@ -57,7 +57,7 @@ public abstract class PlayerEntity extends BufferedEntity {
 			
 			// Shooting
 			if(Engine.gameInputHandler.isSpace()) {
-				Bullet bullet = new Bullet((int) this.getCenterX(), (int) this.getCenterY(), this.velX, this.velY);
+				Bullet bullet = new Bullet((int) this.getCenterX(), (int) this.getCenterY(), this.velX, this.velY, this.getRotation());
 				World.bullets.add(bullet);
 			}
 			

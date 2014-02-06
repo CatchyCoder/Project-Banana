@@ -6,19 +6,26 @@ import projectbanana.main.values.Geometry;
 
 public class Bullet extends BufferedEntity {
 	
-	private final double speed = 15.0;
+	private double thrust = 0.65;
 	
-	public Bullet(int x, int y, double velX, double velY) {
+	public Bullet(int x, int y, double velX, double velY, double rotation) {
 		super(x, y, "/bullet/bullet.jpg", Geometry.RECTANGLE, false);
 		
 		// Adding an initial speed to the bullet, that way bullets
 		// move faster when shot from a moving object
-		this.velX =  velX * 2;
-		this.velY =  velY * 2;
+		this.velX =  velX;
+		this.velY =  velY;
+		this.setRotation(rotation);
 	}
 
 	@Override
 	public void tick() {
+		if(thrust > 0.01) {
+			this.accForward(thrust);
+			// Slowly decreasing thrust over time
+			thrust *= 0.925;
+		}
+		
 		this.applyForces();
 	}
 
