@@ -55,7 +55,11 @@ public abstract class PlayerEntity extends BufferedEntity {
 			
 			
 			
-			
+			// Shooting
+			if(Engine.gameInputHandler.isSpace()) {
+				Bullet bullet = new Bullet((int) this.getCenterX(), (int) this.getCenterY(), this.velX, this.velY);
+				World.bullets.add(bullet);
+			}
 			
 			// Respawn the spaceship
 			if(Engine.gameInputHandler.isEnter()) this.respawn();

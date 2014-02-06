@@ -14,10 +14,13 @@ public class World {
 	private static final double SCALE = 3; // 3 is normal
 	public static final Dimension SIZE = new Dimension((int) (1000 * SCALE), (int) (1000 * SCALE));
 	
-	public static TrinityShipEntity player = new TrinityShipEntity(SIZE.width / 2, SIZE.height / 2);
+	public static HomeBaseEntity homeBase = new HomeBaseEntity(SIZE.width / 2, SIZE.height / 2);
+	
+	public static TrinityShipEntity player = new TrinityShipEntity((int) homeBase.getCenterX(), (int) homeBase.getCenterY() + 200);
 	//public static EnemyEntity[] enemies = new EnemyEntity[(int) (((SIZE.width * SIZE.height) / 100) * 0.01)];
-	public static EnemyEntity[] enemies = new EnemyEntity[20];
+	public static EnemyEntity[] enemies = new EnemyEntity[15];
 	private Point[] stars = new Point[(int) (((SIZE.width * SIZE.height) / 100) * 0.006)];
+	public static ArrayList<Bullet> bullets = new ArrayList<Bullet>();
 	
 	// For efficiency statistics
 	private ArrayList<Integer> loads = new ArrayList<Integer>();
@@ -31,7 +34,9 @@ public class World {
 	}
 	
 	public void tick() {
+		homeBase.tick();
 		player.tick();
+		for(Bullet bullet : bullets) bullet.tick();
 		for(EnemyEntity enemy : enemies) enemy.tick();
 	}
 	
@@ -39,8 +44,11 @@ public class World {
 		renderBackground(g);
 		renderStars(g);
 		
+		for(Bullet bullet : bullets) if(bullet.isOnScreen()) bullet.render(g);
+		
 		for(EnemyEntity enemy : enemies) if(enemy.isOnScreen()) enemy.render(g); // REAL
 		//for(EnemyEntity enemy : enemies) enemy.render(g);
+		homeBase.render(g);
 		player.render(g);
 		
 		/*// Rendering points

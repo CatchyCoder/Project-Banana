@@ -27,14 +27,6 @@ public final class Engine implements Runnable {
 	 * * Base direction of movement off of rotation for ALL objects -- will help with collision detection later (linear algebra)
 	 * + Add collision detection with edge of world
 	 * 
-	 * Finished:
-	 * * Cleaned up code
-	 * * Make every entity draw itself on a buffered image, and then draw that image
-	 * + Pause the game if it looses focus
-	 * + Add a loading screen after play is pressed
-	 * * Now only objects on the screen are rendered, isOnScreen() is not based off of player
-	 * + Implemented a player HUD
-	 * 
 	 * Bugs:
 	 * * NOT EXACTLY A BUG.. but there is a slight chance that the menu will not pop put correctly
 	 * 		when stopping the game (if stop() gets called inside the isRunning() if statement in render())
@@ -68,7 +60,7 @@ public final class Engine implements Runnable {
 	
 	public static boolean sound = false;
 	private static boolean isRunning = false;
-	public static boolean showPerformance = false;
+	public static boolean showPerformance = true;
 		
 	public Engine() {
 		// Adding input for the actual game

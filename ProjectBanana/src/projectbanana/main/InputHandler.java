@@ -9,7 +9,7 @@ import projectbanana.Core;
 
 public class InputHandler extends KeyAdapter implements MouseWheelListener {
 	
-	private boolean isLeft, isRight, isUp, isDown, isEnter;
+	private boolean isLeft, isRight, isUp, isDown, isEnter, isSpace;
 	
 	@Override
 	public void keyPressed(KeyEvent pEvent) {
@@ -21,6 +21,7 @@ public class InputHandler extends KeyAdapter implements MouseWheelListener {
 		if(src == KeyEvent.VK_W || src == KeyEvent.VK_UP) isUp = true;
 		if(src == KeyEvent.VK_S || src == KeyEvent.VK_DOWN) isDown = true;
 		else if(src == KeyEvent.VK_ENTER) isEnter = true;
+		else if(src == KeyEvent.VK_SPACE) isSpace = true;
 		else if(src == KeyEvent.VK_ESCAPE) Core.ENGINE.stop();
 	}
 	
@@ -34,6 +35,7 @@ public class InputHandler extends KeyAdapter implements MouseWheelListener {
 		if(src == KeyEvent.VK_W || src == KeyEvent.VK_UP) isUp = false;
 		if(src == KeyEvent.VK_S || src == KeyEvent.VK_DOWN) isDown = false;
 		else if(src == KeyEvent.VK_ENTER) isEnter = false;
+		else if(src == KeyEvent.VK_SPACE) isSpace = false;
 	}
 	
 	@Override
@@ -64,5 +66,9 @@ public class InputHandler extends KeyAdapter implements MouseWheelListener {
 	
 	public boolean isEnter() {
 		return isEnter;
+	}
+	
+	public boolean isSpace() {
+		return isSpace;
 	}
 }
