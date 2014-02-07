@@ -13,6 +13,7 @@ import userinterface.window.Window;
 public final class Engine implements Runnable {
 	
 	/* TODO:
+	 * * Give the AI's a little bit of error, that way they don't all end up in the same place
 	 * * Fix the physics engine.. there are bugs, max velocity is a little off, big job :/
 	 * * Force ALL images to be loaded upon startup, somehow, some-way
 	 * 

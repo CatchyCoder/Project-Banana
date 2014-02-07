@@ -18,8 +18,8 @@ public class World {
 	
 	public static TrinityShipEntity player = new TrinityShipEntity((int) homeBase.getCenterX(), (int) homeBase.getCenterY() + 200);
 	//public static EnemyEntity[] enemies = new EnemyEntity[(int) (((SIZE.width * SIZE.height) / 100) * 0.01)];
-	public static EnemyEntity[] enemies = new EnemyEntity[0];
-	public static TestAI[] AIs = new TestAI[10];
+	public static EnemyEntity[] enemies = new EnemyEntity[20];
+	public static TestAI[] AIs = new TestAI[20];
 	private Point[] stars = new Point[(int) (((SIZE.width * SIZE.height) / 100) * 0.006)];
 	public static ArrayList<Bullet> bullets = new ArrayList<Bullet>();
 	
@@ -43,6 +43,8 @@ public class World {
 		player.tick();
 		for(Bullet bullet : bullets) bullet.tick();
 		for(EnemyEntity enemy : enemies) enemy.tick();
+		
+		checkForCollisions();
 	}
 	
 	public void render(Graphics g) {
@@ -103,5 +105,9 @@ public class World {
 		if(font < 20) g.setFont(new Font("Arial", Font.PLAIN, 20));
 		else g.setFont(new Font("Arial", Font.PLAIN, font));
 		g.drawString(String.valueOf(avg) + "% Load", (int) player.getX() + 100, (int) player.getY());
+	}
+	
+	private void checkForCollisions() {
+		
 	}
 }

@@ -52,7 +52,7 @@ public class EnemyEntity extends BufferedEntity {
 			this.lookAt(World.player);
 			setRotation(getRotation() + Math.PI); // Looking in the opposite direction of the player
 			
-			//this.accForward(homingSpeed);
+			this.accForward(homingSpeed);
 			
 			// If close to player, damp the velocity
 			if(sqrDisFromPlayer <= Math.pow(World.player.width, 2)) this.applyVelDamping();
