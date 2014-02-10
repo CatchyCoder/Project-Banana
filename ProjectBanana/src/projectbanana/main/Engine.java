@@ -28,6 +28,10 @@ public final class Engine implements Runnable {
 	 * * Base direction of movement off of rotation for ALL objects -- will help with collision detection later (linear algebra)
 	 * + Add collision detection with edge of world
 	 * 
+	 * 
+	 * + test push
+	 * 
+	 * 
 	 * Finished:
 	 * * Bullets are now more like bullets
 	 * 
