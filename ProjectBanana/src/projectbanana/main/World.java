@@ -8,6 +8,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import projectbanana.main.entity.*;
+import projectbanana.main.values.Geometry;
 
 public class World {
 	
@@ -21,12 +22,14 @@ public class World {
 	public static TrinityShipEntity player = new TrinityShipEntity((int) homeBase.getCenterX(), (int) homeBase.getCenterY() + 200);
 	//public static EnemyEntity[] enemies = new EnemyEntity[(int) (((SIZE.width * SIZE.height) / 100) * 0.01)];
 	public static EnemyEntity[] enemies = new EnemyEntity[0];
-	public static TestAI[] AIs = new TestAI[60];
+	public static TestAI[] AIs = new TestAI[30];
 	private Point[] stars = new Point[(int) (((SIZE.width * SIZE.height) / 100) * 0.006)];
 	public static ArrayList<Bullet> bullets = new ArrayList<Bullet>();
 	
 	// For efficiency statistics
 	private ArrayList<Integer> loads = new ArrayList<Integer>();
+	
+	private boolean showCollisionBoxes = true;
 	
 	public World() {
 		// Loading stars
@@ -67,6 +70,7 @@ public class World {
 		
 		renderBorder(g);
 		player.renderHUD(g);
+		if(showCollisionBoxes) renderCollisionBoxes(g);
 		if(Engine.showPerformance) renderPerformance(g);
 	}
 	
@@ -96,6 +100,18 @@ public class World {
 		g.fillRect(SIZE.width - width, 0, width, SIZE.height); // Right
 	}
 	
+	private void renderCollisionBoxes(Graphics g) {
+		for(Entity entity : entities) {
+			g.setColor(Color.GREEN);
+			if(entity.getGeometry() == Geometry.CIRCLE)
+				g.drawOval((int)(entity.getCenterX() - entity.getBoundingRad() / 2 + 0.5), (int)(entity.getCenterY() - entity.getBoundingRad() / 2 + 0.5), 
+						(int) (entity.getBoundingRad() + 0.5), (int) (entity.getBoundingRad() + 0.5)); 
+			else
+				g.drawRect((int) (entity.getCenterX() - entity.getBoundingWidth() / 2 + 0.5), (int) (entity.getCenterY() - entity.getBoundingHeight() / 2 + 0.5), 
+						(int) (entity.getBoundingWidth() + 0.5), (int) (entity.getBoundingHeight() + 0.5));
+		}
+	}
+	
 	private void renderPerformance(Graphics g) {
 		if(loads.size() >= 10) loads.remove(0);
 		loads.add((int) Engine.load);
@@ -121,7 +137,6 @@ public class World {
 					if(entity.isCollidingWith(entity2).isColliding()) {
 						entity.handleCollision(entity2);
 						entity2.handleCollision(entity);
-						if(entity.equals(entity)) System.err.println("\n\n\nTHIS SHOULD NOT PRINT!!!\n\n\n");
 					}
 				}
 			}

@@ -42,14 +42,7 @@ public abstract class PlayerEntity extends BufferedEntity {
 			/*for(Entity entity : World.enemies) {
 				CollisionEvent event = this.isCollidingWith(entity);
 				if(event.isColliding()) {
-					accX = accY = 0;
-					velX = -velX;
-					velY = -velY;
-					x = lastValidX;
-					y = lastValidY;
-					Sound.BUMP.play();
-					points.add(new Point((int)entity.getCenterX(), (int)entity.getCenterY()));
-					health -= 10;
+					
 				}
 			}*/
 			
@@ -111,6 +104,13 @@ public abstract class PlayerEntity extends BufferedEntity {
 	
 	@Override
 	public void handleCollision(Entity entity) {
-		
+		accX = accY = 0;
+		velX = -velX;
+		velY = -velY;
+		x = lastValidX;
+		y = lastValidY;
+		Sound.BUMP.play();
+		points.add(new Point((int)entity.getCenterX(), (int)entity.getCenterY()));
+		health -= 10;
 	}
 }
