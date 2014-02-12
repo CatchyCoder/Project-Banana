@@ -23,7 +23,7 @@ public class EnemyEntity extends BufferedEntity {
 	
 	@Override
 	public void tick() {
-		for(Entity entity : World.enemies) {
+		/*for(Entity entity : World.enemies) {
 			if(entity != this && this.isCollidingWith(entity).isColliding()) {
 				accX = accY = 0;
 				velX = -velX;
@@ -42,7 +42,7 @@ public class EnemyEntity extends BufferedEntity {
 			x = lastValidX;
 			y = lastValidY;
 			//Sound.BUMP.play();
-		}
+		}*/
 		
 		
 		double sqrDisFromPlayer = getSqrDisFrom(World.player);
@@ -76,5 +76,11 @@ public class EnemyEntity extends BufferedEntity {
 	@Override
 	public void render(Graphics g) {
 		this.renderEntityImage(g);
+	}
+
+	@Override
+	public void handleCollision(Entity entity) {
+		// TODO Auto-generated method stub
+		
 	}
 }

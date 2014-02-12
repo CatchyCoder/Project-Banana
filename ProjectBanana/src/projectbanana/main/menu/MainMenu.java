@@ -2,6 +2,7 @@ package projectbanana.main.menu;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.KeyEvent;
 
 import projectbanana.Core;
 import projectbanana.main.Engine;

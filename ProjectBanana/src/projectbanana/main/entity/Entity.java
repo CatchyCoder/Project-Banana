@@ -2,8 +2,9 @@ package projectbanana.main.entity;
 
 import projectbanana.main.CollisionEvent;
 import projectbanana.main.Engine;
+import projectbanana.main.World;
 import projectbanana.main.values.Geometry;
-import projectbanana.main.values.RotationId;
+import projectbanana.main.values.Rotation;
 
 public abstract class Entity implements VisibleObject {
 	
@@ -22,10 +23,15 @@ public abstract class Entity implements VisibleObject {
 	protected final double MIN_VEL = 0.01, MIN_ROT_VEL = Math.toRadians(0.01); // Slowest speeds that are allowed before velocity goes to 0
 	protected double velDamping = 0.985, rotVelDamping = 0.92;
 	
+	private boolean collisionChecked = false;
+	
 	public Entity(int x, int y, Geometry geometry) {
 		this.x = lastValidX = x;
 		this.y = lastValidY = y;
 		this.GEOMETRY = geometry;
+		
+		// Adding this entity to the worlds list of entities
+		World.entities.add(this);
 	}
 	
 	protected void applyForces() {
@@ -229,7 +235,7 @@ public abstract class Entity implements VisibleObject {
 	 */
 	protected void turn(int dir, double maxVel, double force) throws Exception {
 		if(force > maxVel) throw new Exception("\"force\" cannot be greater than \"max velocity\"");
-		if(dir != RotationId.CLOCKWISE.getId() && dir != RotationId.COUNTER_CLOCKWISE.getId()) throw new Exception("\"dir\" can only be 1 (clockwise) or -1 (counter-clockwise)");
+		if(dir != Rotation.CLOCKWISE.getId() && dir != Rotation.COUNTER_CLOCKWISE.getId()) throw new Exception("\"dir\" can only be 1 (clockwise) or -1 (counter-clockwise)");
 		
 		rotAcc = force * dir;
 		
@@ -287,4 +293,14 @@ public abstract class Entity implements VisibleObject {
 	public void setRotation(double value) {
 		rotation = value;
 	}
+	
+	public boolean isCollisionChecked() {
+		return collisionChecked;
+	}
+	
+	public void setCollisionChecked(boolean value) {
+		collisionChecked = value;
+	}
+	
+	abstract public void handleCollision(Entity entity);
 }

@@ -19,4 +19,10 @@ public class HomeBaseEntity extends BufferedEntity {
 	public void render(Graphics g) {
 		this.renderEntityImage(g);
 	}
+
+	@Override
+	public void handleCollision(Entity entity) {
+		// TODO Auto-generated method stub
+		
+	}
 }

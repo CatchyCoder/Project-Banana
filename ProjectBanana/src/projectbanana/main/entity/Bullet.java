@@ -6,7 +6,7 @@ import projectbanana.main.values.Geometry;
 
 public class Bullet extends BufferedEntity {
 	
-	private double thrust = 0.65;
+	private double thrust = 0.65; // 0.65
 	
 	public Bullet(int x, int y, double velX, double velY, double rotation) {
 		super(x, y, "/bullet/bullet.jpg", Geometry.RECTANGLE, false);
@@ -32,5 +32,11 @@ public class Bullet extends BufferedEntity {
 	@Override
 	public void render(Graphics g) {
 		this.renderEntityImage(g);
+	}
+
+	@Override
+	public void handleCollision(Entity entity) {
+		// TODO Auto-generated method stub
+		
 	}
 }

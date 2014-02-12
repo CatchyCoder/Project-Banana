@@ -46,7 +46,7 @@ public final class Engine implements Runnable {
 	 */
 	
 	public static final Dimension SIZE = new Dimension(840, 840);
-	private static final double SCALE = 1;
+	private static final double SCALE = 1.25;
 	
 	public static double MAX_FPS = 60.0;
 	public static double zoom = 2.0;

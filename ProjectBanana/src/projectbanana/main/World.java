@@ -14,12 +14,14 @@ public class World {
 	private static final double SCALE = 3; // 3 is normal
 	public static final Dimension SIZE = new Dimension((int) (1000 * SCALE), (int) (1000 * SCALE));
 	
+	public static ArrayList<Entity> entities = new ArrayList<Entity>();
+	
 	public static HomeBaseEntity homeBase = new HomeBaseEntity(SIZE.width / 2, SIZE.height / 2);
 	
 	public static TrinityShipEntity player = new TrinityShipEntity((int) homeBase.getCenterX(), (int) homeBase.getCenterY() + 200);
 	//public static EnemyEntity[] enemies = new EnemyEntity[(int) (((SIZE.width * SIZE.height) / 100) * 0.01)];
-	public static EnemyEntity[] enemies = new EnemyEntity[20];
-	public static TestAI[] AIs = new TestAI[20];
+	public static EnemyEntity[] enemies = new EnemyEntity[0];
+	public static TestAI[] AIs = new TestAI[60];
 	private Point[] stars = new Point[(int) (((SIZE.width * SIZE.height) / 100) * 0.006)];
 	public static ArrayList<Bullet> bullets = new ArrayList<Bullet>();
 	
@@ -108,6 +110,24 @@ public class World {
 	}
 	
 	private void checkForCollisions() {
+		for(Entity entity : entities) {
+			// Setting collisionChecked value right away, that
+			// way it doesn't check against itself
+			entity.setCollisionChecked(true);
+			
+			for(Entity entity2 : entities) {
+				// Making sure that the entity has not already been checked for collision
+				if(!entity2.isCollisionChecked()) {
+					if(entity.isCollidingWith(entity2).isColliding()) {
+						entity.handleCollision(entity2);
+						entity2.handleCollision(entity);
+						if(entity.equals(entity)) System.err.println("\n\n\nTHIS SHOULD NOT PRINT!!!\n\n\n");
+					}
+				}
+			}
+		}
 		
+		// Resetting the 'collisionChecked' value for all entities
+		for(Entity entity : entities) entity.setCollisionChecked(false);
 	}
 }

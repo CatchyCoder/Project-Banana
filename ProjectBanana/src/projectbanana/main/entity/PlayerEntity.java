@@ -11,7 +11,7 @@ import projectbanana.main.Engine;
 import projectbanana.main.World;
 import projectbanana.main.util.Sound;
 import projectbanana.main.values.Geometry;
-import projectbanana.main.values.RotationId;
+import projectbanana.main.values.Rotation;
 
 public abstract class PlayerEntity extends BufferedEntity {
 	
@@ -39,7 +39,7 @@ public abstract class PlayerEntity extends BufferedEntity {
 	@Override
 	public void tick() {
 		try {
-			for(Entity entity : World.enemies) {
+			/*for(Entity entity : World.enemies) {
 				CollisionEvent event = this.isCollidingWith(entity);
 				if(event.isColliding()) {
 					accX = accY = 0;
@@ -51,7 +51,7 @@ public abstract class PlayerEntity extends BufferedEntity {
 					points.add(new Point((int)entity.getCenterX(), (int)entity.getCenterY()));
 					health -= 10;
 				}
-			}
+			}*/
 			
 			
 			
@@ -68,8 +68,8 @@ public abstract class PlayerEntity extends BufferedEntity {
 			else {
 				// If turning
 				if(Engine.gameInputHandler.isLeft() || Engine.gameInputHandler.isRight()) {
-					if(Engine.gameInputHandler.isLeft()) this.turn(RotationId.COUNTER_CLOCKWISE.getId(), rotSpeed, rotThrust);
-					if(Engine.gameInputHandler.isRight()) this.turn(RotationId.CLOCKWISE.getId(), rotSpeed, rotThrust);
+					if(Engine.gameInputHandler.isLeft()) this.turn(Rotation.COUNTER_CLOCKWISE.getId(), rotSpeed, rotThrust);
+					if(Engine.gameInputHandler.isRight()) this.turn(Rotation.CLOCKWISE.getId(), rotSpeed, rotThrust);
 				}
 				
 				// If not turning
@@ -107,5 +107,10 @@ public abstract class PlayerEntity extends BufferedEntity {
 		g.setColor(new Color((int)(value * percentage), (int)(value * percentage), value));
 		int gaugeHeight = (int) (200 * health / 100);
 		g.fillRect(Engine.cameraX, Engine.cameraY2, 50, (int) -(this.vel * 10));
+	}
+	
+	@Override
+	public void handleCollision(Entity entity) {
+		
 	}
 }
