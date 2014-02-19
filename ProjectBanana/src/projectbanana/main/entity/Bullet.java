@@ -2,6 +2,7 @@ package projectbanana.main.entity;
 
 import java.awt.Graphics;
 
+import projectbanana.main.Engine;
 import projectbanana.main.values.Geometry;
 
 public class Bullet extends BufferedEntity {
@@ -36,7 +37,6 @@ public class Bullet extends BufferedEntity {
 
 	@Override
 	public void handleCollision(Entity entity) {
-		// TODO Auto-generated method stub
 		
 	}
 }

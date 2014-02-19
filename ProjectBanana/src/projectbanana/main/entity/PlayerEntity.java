@@ -60,10 +60,8 @@ public abstract class PlayerEntity extends BufferedEntity {
 			// Calculate movement
 			else {
 				// If turning
-				if(Engine.gameInputHandler.isLeft() || Engine.gameInputHandler.isRight()) {
-					if(Engine.gameInputHandler.isLeft()) this.turn(Rotation.COUNTER_CLOCKWISE.getId(), rotSpeed, rotThrust);
-					if(Engine.gameInputHandler.isRight()) this.turn(Rotation.CLOCKWISE.getId(), rotSpeed, rotThrust);
-				}
+				if(Engine.gameInputHandler.isLeft()) this.turn(Rotation.COUNTER_CLOCKWISE.getId(), rotSpeed, rotThrust);
+				if(Engine.gameInputHandler.isRight()) this.turn(Rotation.CLOCKWISE.getId(), rotSpeed, rotThrust);
 				
 				// If not turning
 				else if(rotVel != 0) this.applyRotVelDamping();

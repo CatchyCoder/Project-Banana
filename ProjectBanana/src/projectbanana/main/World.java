@@ -19,17 +19,19 @@ public class World {
 	
 	public static HomeBaseEntity homeBase = new HomeBaseEntity(SIZE.width / 2, SIZE.height / 2);
 	
+	public static EnemyCarrierEntity[] carriers = new EnemyCarrierEntity[10];
+	
 	public static TrinityShipEntity player = new TrinityShipEntity((int) homeBase.getCenterX(), (int) homeBase.getCenterY() + 200);
 	//public static EnemyEntity[] enemies = new EnemyEntity[(int) (((SIZE.width * SIZE.height) / 100) * 0.01)];
 	public static EnemyEntity[] enemies = new EnemyEntity[0];
-	public static TestAI[] AIs = new TestAI[30];
+	public static ArrayList<TestAI> AIs = new ArrayList<TestAI>();
 	private Point[] stars = new Point[(int) (((SIZE.width * SIZE.height) / 100) * 0.006)];
 	public static ArrayList<Bullet> bullets = new ArrayList<Bullet>();
 	
 	// For efficiency statistics
 	private ArrayList<Integer> loads = new ArrayList<Integer>();
 	
-	private boolean showCollisionBoxes = true;
+	private boolean showCollisionBoxes = false;
 	
 	public World() {
 		// Loading stars
@@ -39,11 +41,15 @@ public class World {
 		for(int x = 0; x < enemies.length; x++) enemies[x] = new EnemyEntity((int) (Math.random() * SIZE.width), (int) (Math.random() * SIZE.height));
 		
 		// Loading AI
-		for(int x = 0; x < AIs.length; x++) AIs[x] = new TestAI((int) (Math.random() * SIZE.width), (int) (Math.random() * SIZE.height));
+		for(int x = 0; x < AIs.size(); x++) AIs.add(new TestAI((int) (Math.random() * SIZE.width), (int) (Math.random() * SIZE.height)));
+		
+		// Loading carriers
+		for(int x = 0; x < carriers.length; x++) carriers[x] = new EnemyCarrierEntity((int) (Math.random() * SIZE.width), (int) (Math.random() * SIZE.height));
 	}
 	
 	public void tick() {
 		for(TestAI ai : AIs)ai.tick();
+		for(EnemyCarrierEntity carrier : carriers) carrier.tick();
 		homeBase.tick();
 		player.tick();
 		for(Bullet bullet : bullets) bullet.tick();
@@ -58,6 +64,7 @@ public class World {
 		
 		for(Bullet bullet : bullets) if(bullet.isOnScreen()) bullet.render(g);
 		if(homeBase.isOnScreen()) homeBase.render(g);
+		for(EnemyCarrierEntity carrier : carriers) if(carrier.isOnScreen()) carrier.render(g);
 		for(EnemyEntity enemy : enemies) if(enemy.isOnScreen()) enemy.render(g);
 		for(TestAI ai : AIs)ai.render(g);
 		player.render(g);

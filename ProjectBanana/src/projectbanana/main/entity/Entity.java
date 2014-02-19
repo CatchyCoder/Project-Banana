@@ -250,6 +250,10 @@ public abstract class Entity implements VisibleObject {
 		if(getXDisFrom(entity) > 0) rotation += Math.toRadians(180);
 	}
 	
+	protected double randomRotation() {
+		return Math.random() * 2 * Math.PI;
+	}
+	
 	public double getXDisFrom(Entity entity) {
 		return (getCenterX() - entity.getCenterX());
 	}

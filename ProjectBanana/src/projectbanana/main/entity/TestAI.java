@@ -17,7 +17,7 @@ public class TestAI extends BufferedEntity {
 		super(x, y, "/spaceships/ai.png", Geometry.CIRCLE, true);
 		
 		// Giving the entity a random start rotation
-		this.setRotation(Math.random() * 2 * Math.PI);
+		this.setRotation(this.randomRotation());
 	}
 	
 	@Override
