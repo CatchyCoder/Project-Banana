@@ -1,7 +1,9 @@
 package projectbanana.main.menu;
 
-import java.awt.event.MouseEvent;
+import projectbanana.main.Engine;
 
+import userinterface.item.InteractiveItem;
+import userinterface.item.StateButtonItem;
 import userinterface.page.Page;
 import userinterface.window.Window;
 
@@ -9,21 +11,30 @@ public class OptionsMenu extends Page {
 	
 	private static final long serialVersionUID = 1L;
 	
-	//private OnOffButton soundButton = new OnOffButton(this, 0, 0, "SoundOn.png", "SoundOn.png", "SoundOff.png", "SoundOff.png", Engine.sound);
+	private String[] paths = {
+			"SoundOn.png",
+			"SoundOff.png"
+	};
+	private String[] hoverPaths = {
+			"SoundOn.png",
+			"SoundOff.png"
+	};
+	private StateButtonItem soundSwitch = new StateButtonItem(this, 0, 0, paths, hoverPaths);
 	
 	public OptionsMenu(Window window, int x, int y, int width, int height, String resourcePath) {
 		super(window, x, y, width, height, resourcePath);
+		
+		// Setting the soundSwitch to the correct state
+		if(Engine.sound) soundSwitch.setState(0);
+		else soundSwitch.setState(1);
 	}
 
 	@Override
-	public void mousePressed(MouseEvent event) {
-		Object source = event.getSource();
-		
-		/*Engine.sound = !Engine.sound;
-		if(source.equals(soundButton)) soundButton.flipState();
-		
-		// Must repaint the menu on the screen to update the button  			CHECK IF WE NEED THIS NOW
-		Engine.window.setPage(new OptionsMenu());*/
+	public void handleMousePress(InteractiveItem item) {		
+		if(item.equals(soundSwitch)) {
+			Engine.sound = !Engine.sound;
+			System.out.println("Sound change : " + Engine.sound);
+		}
 	}
 
 }

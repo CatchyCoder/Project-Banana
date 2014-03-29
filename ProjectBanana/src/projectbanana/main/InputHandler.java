@@ -40,9 +40,13 @@ public class InputHandler extends KeyAdapter implements MouseWheelListener {
 	
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent mWheel) {
-		double percentage = 0.2;
+		double percentage = 0.1;
+		
+		// Resetting zoom amount
 		if(mWheel.isControlDown()) Engine.zoom = 2;
+		// Zooming out
 		else if(mWheel.getWheelRotation() == 1) Engine.zoom *= 1 - percentage;
+		// Zooming in
 		else Engine.zoom *= 1 + percentage;
 		
 		mWheel.consume();

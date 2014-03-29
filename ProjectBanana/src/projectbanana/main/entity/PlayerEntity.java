@@ -94,10 +94,13 @@ public abstract class PlayerEntity extends BufferedEntity {
 	public void renderHUD(Graphics g) {
 		// Rendering the players HUD
 		int value = (int) (Math.min(this.vel / speed, 1) * 255);
-		double percentage = 0.25;
-		g.setColor(new Color((int)(value * percentage), (int)(value * percentage), value));
+		double blackWhitePercent = 0.33;
+		g.setColor(new Color((int)(value * blackWhitePercent), (int)(value * blackWhitePercent), value));
 		int gaugeHeight = (int) (200 * health / 100);
-		g.fillRect(Engine.cameraX, Engine.cameraY2, 50, (int) -(this.vel * 10));
+		g.fillRect(Engine.cameraX, Engine.cameraY2, (int) (150 / Engine.zoom), (int) -((this.vel * 30) / Engine.zoom));
+		
+		g.setColor(Color.RED);
+		g.drawString("Health: ", Engine.cameraX, (int) (Engine.cameraY * 1.1));
 	}
 	
 	@Override

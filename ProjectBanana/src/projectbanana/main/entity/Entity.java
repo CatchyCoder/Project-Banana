@@ -306,6 +306,14 @@ public abstract class Entity implements VisibleObject {
 		collisionChecked = value;
 	}
 	
+	public double getWidth() {
+		return width;
+	}
+	
+	public double getHeight() {
+		return height;
+	}
+	
 	public double getBoundingWidth() {
 		return boundingWidth;
 	}

@@ -13,7 +13,6 @@ import userinterface.window.Window;
 public final class Engine implements Runnable {
 	
 	/* TODO:
-	 * * Give the AI's a little bit of error, that way they don't all end up in the same place
 	 * * Fix the physics engine.. there are bugs, max velocity is a little off, big job :/
 	 * * Force ALL images to be loaded upon startup, somehow, some-way
 	 * 
@@ -27,19 +26,12 @@ public final class Engine implements Runnable {
 	 * * Only render stars on screen
 	 * * Base direction of movement off of rotation for ALL objects -- will help with collision detection later (linear algebra)
 	 * + Add collision detection with edge of world
-	 * 
-	 * 
-	 * + test push
-	 * 
-	 * 
-	 * Finished:
-	 * * Bullets are now more like bullets
+	 * + Rename EnemyEntity to HomingMineEntity
+	 * + Make carrier ships that spawn the homing mines (EnemyEntity)
 	 * 
 	 * Bugs:
 	 * * NOT EXACTLY A BUG.. but there is a slight chance that the menu will not pop put correctly
 	 * 		when stopping the game (if stop() gets called inside the isRunning() if statement in render())
-	 * - Sometimes, if load a menu while playing the game and your mouse is over the menu buttons,
-	 * 		the screen does not refresh
 	 * - Frame timing gets messed up once you stop and start the game again... is noticeable when you
 	 * 		stop and start the game several times at 1 frame a second
 	 * - Ship gets slightly bigger when on the left or top side of the map (Easier to see with circle drawn around it)
@@ -110,8 +102,6 @@ public final class Engine implements Runnable {
 	}
 	
 	private void render() {
-		
-		
 		// Drawing a specific part of the world (the camera) below
 		double x = World.player.getCenterX();
 		double y = World.player.getCenterY();
@@ -197,7 +187,9 @@ public final class Engine implements Runnable {
 					spareTime = System.nanoTime() - spareTime;
 					frames++;
 					load = (calcTime * 100) / FRAME_DELAY;
-					System.out.format("  [Frame %3s] Calc Time: %2.5s   |   Spare Time: %2.5s   |   %2.5s%s Load.\n", frames, calcTime / 1000000.0, spareTime / 1000000.0, load, '%');
+					// Displaying error text if load is above 100%
+					if(load >= 100) System.err.format("  [Frame %3s] Calc Time: %2.5s   |   Spare Time: %2.5s   |   %2.5s%s Load.\n", frames, calcTime / 1000000.0, spareTime / 1000000.0, load, '%');
+					else System.out.format("  [Frame %3s] Calc Time: %2.5s   |   Spare Time: %2.5s   |   %2.5s%s Load.\n", frames, calcTime / 1000000.0, spareTime / 1000000.0, load, '%');
 					frameTime = System.nanoTime();
 					
 					// Calculating FPS

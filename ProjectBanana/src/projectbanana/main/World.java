@@ -8,6 +8,9 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import projectbanana.main.entity.*;
+import projectbanana.main.entity.enemy.EnemyCarrierEntity;
+import projectbanana.main.entity.enemy.EnemyEntity;
+import projectbanana.main.entity.enemy.TestAI;
 import projectbanana.main.values.Geometry;
 
 public class World {
@@ -23,7 +26,7 @@ public class World {
 	
 	public static TrinityShipEntity player = new TrinityShipEntity((int) homeBase.getCenterX(), (int) homeBase.getCenterY() + 200);
 	//public static EnemyEntity[] enemies = new EnemyEntity[(int) (((SIZE.width * SIZE.height) / 100) * 0.01)];
-	public static EnemyEntity[] enemies = new EnemyEntity[0];
+	public static EnemyEntity[] enemies = new EnemyEntity[10];
 	public static ArrayList<TestAI> AIs = new ArrayList<TestAI>();
 	private Point[] stars = new Point[(int) (((SIZE.width * SIZE.height) / 100) * 0.006)];
 	public static ArrayList<Bullet> bullets = new ArrayList<Bullet>();
@@ -66,7 +69,7 @@ public class World {
 		if(homeBase.isOnScreen()) homeBase.render(g);
 		for(EnemyCarrierEntity carrier : carriers) if(carrier.isOnScreen()) carrier.render(g);
 		for(EnemyEntity enemy : enemies) if(enemy.isOnScreen()) enemy.render(g);
-		for(TestAI ai : AIs)ai.render(g);
+		for(TestAI ai : AIs) ai.render(g);
 		player.render(g);
 		
 		/*// Rendering points
