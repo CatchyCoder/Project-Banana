@@ -8,7 +8,9 @@ import java.awt.event.MouseEvent;
 import projectbanana.main.Engine;
 import projectbanana.main.World;
 import projectbanana.main.entity.BufferedEntity;
+import projectbanana.main.entity.Bullet;
 import projectbanana.main.entity.Entity;
+import projectbanana.main.values.EntityType;
 import projectbanana.main.values.Geometry;
 import userinterface.InteractiveComponent;
 
@@ -17,7 +19,7 @@ public class EnemyCarrierEntity extends BufferedEntity {
 	private double thrust = 0.025, speed = 1;
 	
 	public EnemyCarrierEntity(int x, int y) {
-		super(x, y, "/homebase/homebase.jpg", Geometry.RECTANGLE, true);
+		super(x, y, "/homebase/homebase.jpg", Geometry.RECTANGLE, EntityType.ENEMY, true);
 		this.setRotation(this.randomRotation());
 	}
 
@@ -39,7 +41,7 @@ public class EnemyCarrierEntity extends BufferedEntity {
 	}
 	
 	private void spawnShip() {
-		World.AIs.add(new TestAI((int) this.getCenterX(), (int) this.getCenterY()));
+		new TestAI((int) this.getCenterX(), (int) this.getCenterY());
 	}
 
 	@Override
@@ -49,8 +51,10 @@ public class EnemyCarrierEntity extends BufferedEntity {
 
 	@Override
 	public void handleCollision(Entity entity) {
-		// TODO Auto-generated method stub
-		
+		// If colliding with the players bullet
+		if(entity instanceof Bullet && !entity.getType().equals(this.getType())) {
+			isDone = true;
+		}
 	}
 	
 }

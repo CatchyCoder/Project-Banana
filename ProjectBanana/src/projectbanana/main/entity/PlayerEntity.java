@@ -3,13 +3,11 @@ package projectbanana.main.entity;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
-import java.awt.image.VolatileImage;
 import java.util.ArrayList;
 
-import projectbanana.main.CollisionEvent;
 import projectbanana.main.Engine;
-import projectbanana.main.World;
 import projectbanana.main.util.Sound;
+import projectbanana.main.values.EntityType;
 import projectbanana.main.values.Geometry;
 import projectbanana.main.values.Rotation;
 
@@ -21,6 +19,9 @@ public abstract class PlayerEntity extends BufferedEntity {
 	protected double rotThrust = rotSpeed * 0.05;
 	
 	protected double health = 100.0;
+	private double reloadTime = 333;
+	
+	private long startTime = 0;
 	
 	private static final String PATH = "/spaceships/";
 	private final String imagePath;
@@ -31,7 +32,7 @@ public abstract class PlayerEntity extends BufferedEntity {
 	//private VolatileImage HUD = Engine.window.createVolatileImage(Engine.SIZE.width, Engine.SIZE.height);
 	
 	public PlayerEntity(int x, int y, String imageName, String thrustImageName) {
-		super(x, y, PATH + imageName, Geometry.CIRCLE, true);
+		super(x, y, PATH + imageName, Geometry.CIRCLE, EntityType.FRIENDLY, true);
 		imagePath = PATH + imageName;
 		thrustImagePath = PATH + thrustImageName;
 	}
@@ -39,22 +40,7 @@ public abstract class PlayerEntity extends BufferedEntity {
 	@Override
 	public void tick() {
 		try {
-			/*for(Entity entity : World.enemies) {
-				CollisionEvent event = this.isCollidingWith(entity);
-				if(event.isColliding()) {
-					
-				}
-			}*/
-			
-			
-			
-			// Shooting
-			if(Engine.gameInputHandler.isSpace()) {
-				Bullet bullet = new Bullet((int) this.getCenterX(), (int) this.getCenterY(), this.velX, this.velY, this.getRotation());
-				World.bullets.add(bullet);
-			}
-			
-			// Respawn the spaceship
+			// Re-spawn the spaceship
 			if(Engine.gameInputHandler.isEnter()) this.respawn();
 			
 			// Calculate movement
@@ -79,6 +65,14 @@ public abstract class PlayerEntity extends BufferedEntity {
 				}
 				
 				this.applyForces();
+			}
+			
+			// Shooting
+			if(Engine.gameInputHandler.isSpace()) {
+				if(System.currentTimeMillis() - startTime >= reloadTime) {
+					startTime = System.currentTimeMillis();
+					new Bullet((int) this.getCenterX(), (int) this.getCenterY(), this.velX, this.velY, this.getRotation(), EntityType.FRIENDLY);
+				}
 			}
 		}
 		catch(Exception e) {
@@ -105,13 +99,22 @@ public abstract class PlayerEntity extends BufferedEntity {
 	
 	@Override
 	public void handleCollision(Entity entity) {
-		accX = accY = 0;
-		velX = -velX;
-		velY = -velY;
-		x = lastValidX;
-		y = lastValidY;
-		Sound.BUMP.play();
-		points.add(new Point((int)entity.getCenterX(), (int)entity.getCenterY()));
-		health -= 10;
+		// If colliding with an enemy's bullet
+		if(entity instanceof Bullet) {
+			if(!entity.getType().equals(this.getType())) {
+				health -= 10;
+				if(health <= 0)
+					isDone = true;
+			}
+		}
+		else {
+			accX = accY = 0;
+			velX = -velX;
+			velY = -velY;
+			x = lastValidX;
+			y = lastValidY;
+			Sound.BUMP.play();
+			points.add(new Point((int)entity.getCenterX(), (int)entity.getCenterY()));
+		}
 	}
 }

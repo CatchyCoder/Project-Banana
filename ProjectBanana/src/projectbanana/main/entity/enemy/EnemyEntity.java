@@ -5,8 +5,10 @@ import java.awt.Graphics;
 import projectbanana.main.CollisionEvent;
 import projectbanana.main.World;
 import projectbanana.main.entity.BufferedEntity;
+import projectbanana.main.entity.Bullet;
 import projectbanana.main.entity.Entity;
 import projectbanana.main.util.Sound;
+import projectbanana.main.values.EntityType;
 import projectbanana.main.values.Geometry;
 
 public class EnemyEntity extends BufferedEntity {
@@ -16,7 +18,7 @@ public class EnemyEntity extends BufferedEntity {
 	private double range = 200;
 			
 	public EnemyEntity(int x, int y) {
-		super(x, y, "/spaceships/SpaceShipSmallNew.png", Geometry.CIRCLE, false);
+		super(x, y, "/spaceships/SpaceShipSmallNew.png", Geometry.CIRCLE, EntityType.ENEMY, false);
 		velDamping = 0.99;
 		boundingRad *= 0.5;
 	}
@@ -57,5 +59,10 @@ public class EnemyEntity extends BufferedEntity {
 	}
 
 	@Override
-	public void handleCollision(Entity entity) {}
+	public void handleCollision(Entity entity) {
+		// If colliding with the players bullet
+		if(entity instanceof Bullet && !entity.getType().equals(this.getType())) {
+			isDone = true;
+		}
+	}
 }

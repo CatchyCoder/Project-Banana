@@ -1,14 +1,20 @@
 package projectbanana.main.entity;
 
+import java.util.ArrayList;
+
 import projectbanana.main.CollisionEvent;
 import projectbanana.main.Engine;
 import projectbanana.main.World;
+import projectbanana.main.values.EntityType;
 import projectbanana.main.values.Geometry;
 import projectbanana.main.values.Rotation;
 
 public abstract class Entity implements VisibleObject {
 	
+	public static ArrayList<Entity> entities = new ArrayList<Entity>();
+	
 	private final Geometry GEOMETRY;
+	private final EntityType TYPE;
 	
 	protected double x, y, width, height;
 	protected double boundingRad;
@@ -23,15 +29,17 @@ public abstract class Entity implements VisibleObject {
 	protected final double MIN_VEL = 0.01, MIN_ROT_VEL = Math.toRadians(0.01); // Slowest speeds that are allowed before velocity goes to 0
 	protected double velDamping = 0.985, rotVelDamping = 0.92;
 	
+	protected boolean isDone = false;
 	private boolean collisionChecked = false;
 	
-	public Entity(int x, int y, Geometry geometry) {
+	public Entity(int x, int y, Geometry geometry, EntityType type) {
 		this.x = lastValidX = x;
 		this.y = lastValidY = y;
 		this.GEOMETRY = geometry;
+		this.TYPE = type;
 		
-		// Adding this entity to the worlds list of entities
-		World.entities.add(this);
+		// Adding this entity to the global list of entities
+		entities.add(this);
 	}
 	
 	protected void applyForces() {
@@ -181,14 +189,9 @@ public abstract class Entity implements VisibleObject {
 		if(force > maxVel) throw new Exception("\"force\" cannot be greater than \"max velocity\"");
 		
 		accForward(force);
+		
 		if(vel > maxVel) {
-			// Making sure that the individual velocities are not greater
-			// than velocity, otherwise velocity will go past max velocity.
-			//System.out.println("x:" + velX + "\ty:" + velY);
-			//if(velX > vel) velX = maxVel;
-			//if(velY > vel) velY = maxVel;
-			
-			// Capping off the velocity
+			// Capping off the velocity to the maximum velocity allowed
 			velX = (velX / vel) * maxVel;
 			velY = (velY / vel) * maxVel;
 		}
@@ -325,6 +328,21 @@ public abstract class Entity implements VisibleObject {
 	public double getBoundingRad() {
 		return boundingRad;
 	}
+	
+	public EntityType getType() {
+		return TYPE;
+	}
+	
+	public boolean isDone() {
+		return isDone;
+	}
+	
+	/**
+	 * Called when the Entity is to be removed from the game. Use
+	 * this to finish up anything else the Entity needs to do before it
+	 * is trashed by the Garbage Collector.
+	 */
+	public void onDone() {}
 	
 	abstract public void handleCollision(Entity entity);
 }

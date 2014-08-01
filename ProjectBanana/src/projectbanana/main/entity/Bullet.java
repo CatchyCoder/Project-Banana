@@ -3,14 +3,16 @@ package projectbanana.main.entity;
 import java.awt.Graphics;
 
 import projectbanana.main.Engine;
+import projectbanana.main.values.EntityType;
 import projectbanana.main.values.Geometry;
 
 public class Bullet extends BufferedEntity {
 	
-	private double thrust = 0.65; // 0.65
-	
-	public Bullet(int x, int y, double velX, double velY, double rotation) {
-		super(x, y, "/bullet/bullet.jpg", Geometry.RECTANGLE, false);
+	private double thrust = 0.65;
+	private int delta = 0;
+		
+	public Bullet(int x, int y, double velX, double velY, double rotation, EntityType type) {
+		super(x, y, "/bullet/bullet.jpg", Geometry.RECTANGLE, type, false);
 		
 		// Adding an initial speed to the bullet, that way bullets
 		// move faster when shot from a moving object
@@ -27,6 +29,11 @@ public class Bullet extends BufferedEntity {
 			thrust *= 0.925;
 		}
 		
+		delta++;
+		
+		if(delta >= 450)
+			isDone = true;
+		
 		this.applyForces();
 	}
 
@@ -37,6 +44,6 @@ public class Bullet extends BufferedEntity {
 
 	@Override
 	public void handleCollision(Entity entity) {
-		
+		//if()
 	}
 }

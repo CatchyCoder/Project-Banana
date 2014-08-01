@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import javax.swing.ImageIcon;
 
 import projectbanana.main.Engine;
+import projectbanana.main.values.EntityType;
 import projectbanana.main.values.Geometry;
 
 public abstract class BufferedEntity extends Entity {
@@ -27,8 +28,8 @@ public abstract class BufferedEntity extends Entity {
 	
 	private final boolean canRotate;
 	
-	public BufferedEntity(int x, int y, String imagePath, Geometry geometry, boolean canRotate) {
-		super(x, y, geometry);
+	public BufferedEntity(int x, int y, String imagePath, Geometry geometry, EntityType type, boolean canRotate) {
+		super(x, y, geometry, type);
 		
 		// Determining whether the image can rotate, if false calculation time will be saved
 		this.canRotate = canRotate;
@@ -118,10 +119,10 @@ public abstract class BufferedEntity extends Entity {
 	
 	/**
 	 * Moves the Entity to the point where it was originally spawned at.
-	 * If the Entity can rotate, then the Entity's image will be rotated.
+	 * If the Entity can rotate, then the Entity's rotation is reset.
 	 */
 	@Override
-	protected void respawn() {
+	public void respawn() {
 		super.respawn();
 		if(canRotate) rotateImage();
 	}
