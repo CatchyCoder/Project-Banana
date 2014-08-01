@@ -8,7 +8,7 @@ import projectbanana.main.values.Geometry;
 public class HomeBaseEntity extends BufferedEntity {
 	
 	public HomeBaseEntity(int x, int y) {
-		super(x, y, "/homebase/homebase.jpg", Geometry.RECTANGLE, EntityType.FRIENDLY, false);
+		super(x, y, "/HQ/HQ.png", Geometry.RECTANGLE, EntityType.FRIENDLY, false);
 	}
 
 	@Override

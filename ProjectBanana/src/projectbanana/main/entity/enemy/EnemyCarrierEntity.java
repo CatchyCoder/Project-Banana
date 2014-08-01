@@ -41,7 +41,7 @@ public class EnemyCarrierEntity extends BufferedEntity {
 	}
 	
 	private void spawnShip() {
-		new TestAI((int) this.getCenterX(), (int) this.getCenterY());
+		new SeekerEntity((int) this.getCenterX(), (int) this.getCenterY());
 	}
 
 	@Override

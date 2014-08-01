@@ -19,7 +19,7 @@ public abstract class PlayerEntity extends BufferedEntity {
 	protected double rotThrust = rotSpeed * 0.05;
 	
 	protected double health = 100.0;
-	private double reloadTime = 333;
+	private double reloadTime = 5; //333
 	
 	private long startTime = 0;
 	

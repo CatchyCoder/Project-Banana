@@ -186,7 +186,7 @@ public abstract class Entity implements VisibleObject {
 	 * @throws Exception
 	 */
 	protected void moveForward(double force, double maxVel) throws Exception {
-		if(force > maxVel) throw new Exception("\"force\" cannot be greater than \"max velocity\"");
+		if(force > maxVel) throw new Exception("\"force\" (" + force + ") cannot be greater than \"max velocity\"(" + maxVel + ")");
 		
 		accForward(force);
 		

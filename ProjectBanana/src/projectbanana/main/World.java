@@ -9,8 +9,9 @@ import java.util.ArrayList;
 
 import projectbanana.main.entity.*;
 import projectbanana.main.entity.enemy.EnemyCarrierEntity;
-import projectbanana.main.entity.enemy.EnemyEntity;
-import projectbanana.main.entity.enemy.TestAI;
+import projectbanana.main.entity.enemy.HomingMineEntity;
+import projectbanana.main.entity.enemy.SeekerEntity;
+import projectbanana.main.values.EntityType;
 import projectbanana.main.values.Geometry;
 
 public class World {
@@ -22,9 +23,11 @@ public class World {
 	public static HomeBaseEntity HQ = new HomeBaseEntity(SIZE.width / 2, SIZE.height / 2);
 	public static TrinityShipEntity player = new TrinityShipEntity((int) HQ.getCenterX(), (int) HQ.getCenterY() - 100);
 	
-	private Point[] stars = new Point[(int) (SIZE.width * SIZE.height * 0.00006)];
+	private Point[] stars = new Point[(int) (SIZE.width * SIZE.height * 0.00005)];
 	
 	private int wave = 1;
+	private boolean roundOver = false;
+	private final int SPAWN_DIS = 4500;
 	
 	// For efficiency statistics
 	private ArrayList<Integer> loads = new ArrayList<Integer>();
@@ -52,7 +55,7 @@ public class World {
 		}
 		
 		// Checking if the wave is over
-		if(entities.size() == 1 && entities.get(0).equals(player));
+		checkWave();
 	}
 	
 	public void render(Graphics g) {
@@ -79,14 +82,14 @@ public class World {
 	}
 	
 	private void loadWave() {
-		double easiness = 10; // 0 is the absolute hardest
+		double easiness = 5; // 0 is the absolute hardest (10)
 		int maxEnemies = 50;
 		int enemyCount = (int) ((wave / (wave + easiness)) * maxEnemies);
 		
 		// Generating enemies
-		for(int x = 0; x < (int) (enemyCount * 0.45); x++) new EnemyEntity(randomX(), randomY());
-		for(int x = 0; x < (int) (enemyCount * 0.45); x++) new TestAI(randomX(), randomY());
-		for(int x = 0; x < (int) (enemyCount * 0.1); x++) new EnemyCarrierEntity(randomX(), randomY());		
+		for(int x = 0; x < (int) (enemyCount * 0.45); x++) new HomingMineEntity(randomOuterX(), randomOuterY());
+		for(int x = 0; x < (int) (enemyCount * 0.45); x++) new SeekerEntity(randomOuterX(), randomOuterY());
+		for(int x = 0; x < (int) (enemyCount * 0.1); x++) new EnemyCarrierEntity(randomOuterX(), randomOuterY());		
 	}
 	
 	private void renderBackground(Graphics g) {
@@ -95,9 +98,24 @@ public class World {
 		g.fillRect(0, 0, SIZE.width, SIZE.height);
 	}
 	
+	private void checkWave() {
+		roundOver = true;
+		// Checking if there are any remaining enemies
+		for(Entity entity : entities) {
+			if(entity.getType().equals(EntityType.ENEMY))
+				roundOver = false;
+		}
+		
+		if(roundOver) {
+			roundOver = false;
+			wave++;
+			loadWave();
+		}
+	}
+	
 	private void renderStars(Graphics g) {
 		g.setColor(new Color(245, 245, 245));
-		int size = 3;
+		int size = 1;
 		
 		for(int x = 0; x < stars.length; x++) {
 			g.fillRect((int) (stars[x].x), (int) (stars[x].y), size, size);
@@ -165,7 +183,25 @@ public class World {
 		return (int) (Math.random() * SIZE.width);
 	}
 	
+	public int randomOuterX() {
+		// Spawning on left or right side of world
+		int side = ((int)(Math.random() * 2) == 0 ? 1 : -1);
+		int pos = (int)(Math.random() * SPAWN_DIS) * side;
+		// If on right side
+		if(pos > 0) pos += SIZE.width;
+		return pos;
+	}
+	
 	public int randomY() {
 		return (int) (Math.random() * SIZE.height);
+	}
+	
+	public int randomOuterY() {
+		// Spawning on bottom or top side of world
+		int side = ((int)(Math.random() * 2) == 0 ? 1 : -1);
+		int pos = (int)(Math.random() * SPAWN_DIS) * side;
+		// If on bottom side
+		if(pos > 0) pos += SIZE.height;
+		return pos;
 	}
 }

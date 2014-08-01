@@ -37,7 +37,7 @@ public final class Engine implements Runnable {
 	 * - Ship gets slightly bigger when on the left or top side of the map (Easier to see with circle drawn around it)
 	 */
 	
-	public static final Dimension SIZE = new Dimension(840, 840);
+	public static final Dimension SIZE = new Dimension(950, 950);
 	private static final double SCALE = 1;
 	
 	public static double MAX_FPS = 60.0;
@@ -60,7 +60,7 @@ public final class Engine implements Runnable {
 	
 	public static boolean sound = false;
 	private static boolean isRunning = false;
-	public static boolean showPerformance = true;
+	public static boolean showPerformance = false;
 		
 	public Engine() {
 		// Adding input for the actual game

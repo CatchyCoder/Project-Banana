@@ -12,7 +12,7 @@ public class Bullet extends BufferedEntity {
 	private int delta = 0;
 		
 	public Bullet(int x, int y, double velX, double velY, double rotation, EntityType type) {
-		super(x, y, "/bullet/bullet.jpg", Geometry.RECTANGLE, type, false);
+		super(x, y, "/bullet/bullet.png", Geometry.RECTANGLE, type, false);
 		
 		// Adding an initial speed to the bullet, that way bullets
 		// move faster when shot from a moving object
@@ -44,6 +44,8 @@ public class Bullet extends BufferedEntity {
 
 	@Override
 	public void handleCollision(Entity entity) {
-		//if()
+		if(!entity.getType().equals(this.getType())) {
+			isDone = true;
+		}
 	}
 }
