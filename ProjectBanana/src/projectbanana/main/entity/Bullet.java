@@ -10,6 +10,7 @@ public class Bullet extends BufferedEntity {
 	
 	private double thrust = 0.65;
 	private int delta = 0;
+	private int range = 350;
 		
 	public Bullet(int x, int y, double velX, double velY, double rotation, EntityType type) {
 		super(x, y, "/bullet/bullet.png", Geometry.RECTANGLE, type, false);
@@ -31,7 +32,7 @@ public class Bullet extends BufferedEntity {
 		
 		delta++;
 		
-		if(delta >= 450)
+		if(delta >= range)
 			isDone = true;
 		
 		this.applyForces();

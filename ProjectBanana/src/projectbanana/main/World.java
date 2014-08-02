@@ -152,7 +152,7 @@ public class World {
 		for(Integer load : loads) avg += load;
 		avg /= loads.size();
 		g.setColor(Color.GREEN);
-		int font = (int) (20 / Engine.zoom * 2);
+		int font = (int) (40 / Engine.zoom);
 		if(font < 20) g.setFont(new Font("Arial", Font.PLAIN, 20));
 		else g.setFont(new Font("Arial", Font.PLAIN, font));
 		g.drawString(String.valueOf(avg) + "% Load", (int) player.getX() + 100, (int) player.getY());

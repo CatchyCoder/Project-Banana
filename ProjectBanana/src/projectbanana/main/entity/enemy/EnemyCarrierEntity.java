@@ -19,7 +19,7 @@ public class EnemyCarrierEntity extends BufferedEntity {
 	private double thrust = 0.025, speed = 1;
 	
 	public EnemyCarrierEntity(int x, int y) {
-		super(x, y, "/homebase/homebase.jpg", Geometry.RECTANGLE, EntityType.ENEMY, true);
+		super(x, y, "/HQ/homebase.jpg", Geometry.RECTANGLE, EntityType.ENEMY, true);
 		this.setRotation(this.randomRotation());
 	}
 

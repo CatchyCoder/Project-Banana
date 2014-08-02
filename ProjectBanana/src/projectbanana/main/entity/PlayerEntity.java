@@ -3,6 +3,7 @@ package projectbanana.main.entity;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.image.VolatileImage;
 import java.util.ArrayList;
 
 import projectbanana.main.Engine;
@@ -29,7 +30,7 @@ public abstract class PlayerEntity extends BufferedEntity {
 	
 	public ArrayList<Point> points = new ArrayList<Point>();
 	
-	//private VolatileImage HUD = Engine.window.createVolatileImage(Engine.SIZE.width, Engine.SIZE.height);
+	private VolatileImage HUD = Engine.window.createVolatileImage(Engine.SIZE.width, Engine.SIZE.height);
 	
 	public PlayerEntity(int x, int y, String imageName, String thrustImageName) {
 		super(x, y, PATH + imageName, Geometry.CIRCLE, EntityType.FRIENDLY, true);
@@ -87,7 +88,7 @@ public abstract class PlayerEntity extends BufferedEntity {
 	
 	public void renderHUD(Graphics g) {
 		// Rendering the players HUD
-		int value = (int) (Math.min(this.vel / speed, 1) * 255);
+		/*int value = (int) (Math.min(this.vel / speed, 1) * 255);
 		double blackWhitePercent = 0.33;
 		g.setColor(new Color((int)(value * blackWhitePercent), (int)(value * blackWhitePercent), value));
 		int gaugeHeight = (int) (200 * health / 100);
@@ -95,6 +96,15 @@ public abstract class PlayerEntity extends BufferedEntity {
 		
 		g.setColor(Color.RED);
 		g.drawString("Health: ", Engine.cameraX, (int) (Engine.cameraY * 1.1));
+		*/
+		
+		g = HUD.getGraphics();
+		g.setColor(new Color(255, 0, 0, 20));
+		g.fillRect(0, 0, HUD.getWidth(), HUD.getHeight());
+		
+		//g = Engine.window.getGraphics();
+		//g.drawImage(HUD, 0, 0, null);
+		
 	}
 	
 	@Override
@@ -109,12 +119,16 @@ public abstract class PlayerEntity extends BufferedEntity {
 		}
 		else {
 			accX = accY = 0;
-			velX = -velX;
-			velY = -velY;
+			velX = -velX / 1.5;
+			velY = -velY / 1.5;
 			x = lastValidX;
 			y = lastValidY;
 			Sound.BUMP.play();
 			points.add(new Point((int)entity.getCenterX(), (int)entity.getCenterY()));
 		}
+	}
+	
+	public VolatileImage getHUD() {
+		return HUD;
 	}
 }

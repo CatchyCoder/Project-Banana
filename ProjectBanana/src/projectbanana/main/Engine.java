@@ -142,6 +142,7 @@ public final class Engine implements Runnable {
 			g = window.getGraphics();
 			g.drawImage(image, 0, 0, window.getWidth(), window.getHeight(), 
 					cameraX, cameraY, cameraX2, cameraY2, null);
+			//g.drawImage(World.player.getHUD(), 30, 30, null);
 		}
 		
 		g.dispose();
@@ -187,9 +188,13 @@ public final class Engine implements Runnable {
 					spareTime = System.nanoTime() - spareTime;
 					frames++;
 					load = (calcTime * 100) / FRAME_DELAY;
+					
 					// Displaying error text if load is above 100%
-					if(load >= 100) System.err.format("  [Frame %3s] Calc Time: %2.5s   |   Spare Time: %2.5s   |   %2.5s%s Load.\n", frames, calcTime / 1000000.0, spareTime / 1000000.0, load, '%');
-					else System.out.format("  [Frame %3s] Calc Time: %2.5s   |   Spare Time: %2.5s   |   %2.5s%s Load.\n", frames, calcTime / 1000000.0, spareTime / 1000000.0, load, '%');
+					if(load >= 100)
+						System.err.format("  [Frame %3s] Calc Time: %2.5s   |   Spare Time: %2.5s   |   %2.5s%s Load.\n", frames, calcTime / 1000000.0, spareTime / 1000000.0, load, '%');
+					else
+						System.out.format("  [Frame %3s] Calc Time: %2.5s   |   Spare Time: %2.5s   |   %2.5s%s Load.\n", frames, calcTime / 1000000.0, spareTime / 1000000.0, load, '%');
+					
 					frameTime = System.nanoTime();
 					
 					// Calculating FPS
@@ -212,7 +217,9 @@ public final class Engine implements Runnable {
 					render();
 					
 					// Wait until ready for next frame
-					while((System.nanoTime() - frameTime) < FRAME_DELAY) Thread.sleep(0, SLEEP_TIME_NANO);
+					while((System.nanoTime() - frameTime) < FRAME_DELAY)
+						Thread.sleep(0, SLEEP_TIME_NANO);
+					
 					frameTime = System.nanoTime();
 				}
 			}
