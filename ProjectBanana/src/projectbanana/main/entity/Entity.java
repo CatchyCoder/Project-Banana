@@ -26,7 +26,7 @@ public abstract class Entity implements VisibleObject {
 	protected double vel = 0, velX = 0, velY = 0, accX = 0, accY = 0;
 	protected double rotVel = 0, rotAcc = 0;
 	private double rotation = (3 * Math.PI) / 2; // Default rotation is facing up (North)
-	protected final double MIN_VEL = 0.01, MIN_ROT_VEL = Math.toRadians(0.01); // Slowest speeds that are allowed before velocity goes to 0
+	protected final double MIN_VEL = 0.005, MIN_ROT_VEL = Math.toRadians(0.005); // Slowest speeds that are allowed before velocity goes to 0
 	protected double velDamping = 0.985, rotVelDamping = 0.92;
 	
 	protected boolean isDone = false;
@@ -236,21 +236,30 @@ public abstract class Entity implements VisibleObject {
 	 * @param force
 	 * @throws Exception
 	 */
-	protected void turn(int dir, double maxVel, double force) throws Exception {
+	protected void turn(Rotation rot, double maxVel, double force) throws Exception {
 		if(force > maxVel) throw new Exception("\"force\" cannot be greater than \"max velocity\"");
-		if(dir != Rotation.CLOCKWISE.getId() && dir != Rotation.COUNTER_CLOCKWISE.getId()) throw new Exception("\"dir\" can only be 1 (clockwise) or -1 (counter-clockwise)");
+		//if(!rot.equals(Rotation.CLOCKWISE) && rot.equals(Rotation.COUNTER_CLOCKWISE)) throw new Exception("\"dir\" can only be 1 (clockwise) or -1 (counter-clockwise)");
 		
-		rotAcc = force * dir;
+		rotAcc = force * rot.getId();
 		
 		if(Math.abs(rotVel) > maxVel) {
-			rotVel = maxVel * dir;
+			rotVel = maxVel * rot.getId();
 			rotAcc = 0;
 		}
 	}
 	
+	protected void lookAt(int x, int y) {
+		double xDis = getCenterX() - x;
+		rotation = Math.atan((getCenterY() - y) / xDis);
+		// If entity is to the right
+		if(xDis > 0) rotation += Math.PI;
+	}
+	
 	protected void lookAt(Entity entity) {
-		rotation = Math.atan(getYDisFrom(entity) / getXDisFrom(entity));
-		if(getXDisFrom(entity) > 0) rotation += Math.toRadians(180);
+		double xDis = getXDisFrom(entity);
+		rotation = Math.atan(getYDisFrom(entity) / xDis);
+		// If entity is to the right
+		if(xDis > 0) rotation += Math.PI;
 	}
 	
 	protected double randomRotation() {

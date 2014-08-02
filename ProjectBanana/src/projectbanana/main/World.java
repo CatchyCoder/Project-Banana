@@ -25,7 +25,7 @@ public class World {
 	
 	private Point[] stars = new Point[(int) (SIZE.width * SIZE.height * 0.00005)];
 	
-	private int wave = 1;
+	private int wave = 100;
 	private boolean roundOver = false;
 	private final int SPAWN_DIS = 4500;
 	
@@ -87,9 +87,9 @@ public class World {
 		int enemyCount = (int) ((wave / (wave + easiness)) * maxEnemies);
 		
 		// Generating enemies
-		for(int x = 0; x < (int) (enemyCount * 0.45); x++) new HomingMineEntity(randomOuterX(), randomOuterY());
-		for(int x = 0; x < (int) (enemyCount * 0.45); x++) new SeekerEntity(randomOuterX(), randomOuterY());
-		for(int x = 0; x < (int) (enemyCount * 0.1); x++) new EnemyCarrierEntity(randomOuterX(), randomOuterY());		
+		for(int x = 0; x < (int) (enemyCount * 0); x++) new HomingMineEntity(randomOuterX(), randomOuterY());
+		for(int x = 0; x < (int) (enemyCount * 0); x++) new SeekerEntity(randomOuterX(), randomOuterY());
+		for(int x = 0; x < (int) (enemyCount * 1); x++) new EnemyCarrierEntity(randomOuterX(), randomOuterY());		
 	}
 	
 	private void renderBackground(Graphics g) {

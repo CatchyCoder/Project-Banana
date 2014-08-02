@@ -26,7 +26,6 @@ public final class Engine implements Runnable {
 	 * * Only render stars on screen
 	 * * Base direction of movement off of rotation for ALL objects -- will help with collision detection later (linear algebra)
 	 * + Add collision detection with edge of world
-	 * + Rename EnemyEntity to HomingMineEntity
 	 * + Make carrier ships that spawn the homing mines (EnemyEntity)
 	 * 
 	 * Bugs:

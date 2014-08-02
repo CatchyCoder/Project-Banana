@@ -12,26 +12,65 @@ import projectbanana.main.entity.Bullet;
 import projectbanana.main.entity.Entity;
 import projectbanana.main.values.EntityType;
 import projectbanana.main.values.Geometry;
+import projectbanana.main.values.Rotation;
 import userinterface.InteractiveComponent;
 
 public class EnemyCarrierEntity extends BufferedEntity {
 
-	private double thrust = 0.025, speed = 1;
+	private double thrust = 0.025, speed = 1, turnThrust = 0.001, turnSpeed = 0.01;
+	private boolean orbiting = false, turned = false;
+	
+	private int turnCount = 0;
 	
 	public EnemyCarrierEntity(int x, int y) {
 		super(x, y, "/HQ/homebase.jpg", Geometry.RECTANGLE, EntityType.ENEMY, true);
 		this.setRotation(this.randomRotation());
+		
+		// Rotate the ship towards the center of the map
+		this.lookAt(World.SIZE.width / 2, World.SIZE.height / 2);
 	}
 
 	@Override
 	public void tick() {
 		try {
 			this.moveForward(thrust, speed);
+			
+			if(orbiting) {
+				if(turned) {
+					if(rotVel != 0)
+					System.out.println("turned");
+				}
+				else {
+					// Make an initial turn to begin the orbit
+					turnCount++;
+					if(turnCount < 10)
+						this.turn(Rotation.CLOCKWISE, turnSpeed, turnThrust);
+					else {
+						turned = true;
+						this.rotAcc = 0;
+					}
+						
+					//rotateImage();
+				}
+			}
+			else {
+				// Check if the ship has entered the world
+				double centerX = getCenterX();
+				double centerY = getCenterY();
+				if(centerX >= 0 && centerX <= World.SIZE.width &&
+						centerY >= 0 && centerY <= World.SIZE.height) {
+					// Ship is now ready to orbit players base
+					orbiting = true;
+				}
+			}
+			
+			
+			
 			// Moves the ship around in circles
-			if((int) (Math.random() * 2) == 0) this.setRotation(this.getRotation() * 1.0009);
+			//if((int) (Math.random() * 2) == 0) this.setRotation(this.getRotation() * 1.0009);
 			
 			// Chance to spawn an enemy
-			if((int) (Math.random() * 500) == 0) spawnShip();
+			//if((int) (Math.random() * 500) == 0) spawnShip();
 			
 			this.applyForces();
 		} catch (Exception e) {

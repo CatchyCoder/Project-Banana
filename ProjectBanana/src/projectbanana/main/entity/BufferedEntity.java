@@ -12,6 +12,7 @@ import javax.swing.ImageIcon;
 import projectbanana.main.Engine;
 import projectbanana.main.values.EntityType;
 import projectbanana.main.values.Geometry;
+import projectbanana.main.values.Rotation;
 
 public abstract class BufferedEntity extends Entity {
 	
@@ -134,8 +135,8 @@ public abstract class BufferedEntity extends Entity {
 	}
 	
 	@Override
-	protected void turn(int dir, double maxVel, double force) throws Exception {
-		super.turn(dir, maxVel, force);
+	protected void turn(Rotation rot, double maxVel, double force) throws Exception {
+		super.turn(rot, maxVel, force);
 		if(canRotate) rotateImage();
 	}
 	
