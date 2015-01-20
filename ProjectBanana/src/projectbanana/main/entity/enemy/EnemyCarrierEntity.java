@@ -1,11 +1,7 @@
 package projectbanana.main.entity.enemy;
 
 import java.awt.Graphics;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
 
-import projectbanana.main.Engine;
 import projectbanana.main.World;
 import projectbanana.main.entity.BufferedEntity;
 import projectbanana.main.entity.Bullet;
@@ -13,7 +9,6 @@ import projectbanana.main.entity.Entity;
 import projectbanana.main.values.EntityType;
 import projectbanana.main.values.Geometry;
 import projectbanana.main.values.Rotation;
-import userinterface.InteractiveComponent;
 
 public class EnemyCarrierEntity extends BufferedEntity {
 
@@ -24,7 +19,6 @@ public class EnemyCarrierEntity extends BufferedEntity {
 	
 	public EnemyCarrierEntity(int x, int y) {
 		super(x, y, "/HQ/homebase.jpg", Geometry.RECTANGLE, EntityType.ENEMY, true);
-		this.setRotation(this.randomRotation());
 		
 		// Rotate the ship towards the center of the map
 		this.lookAt(World.SIZE.width / 2, World.SIZE.height / 2);
@@ -38,16 +32,16 @@ public class EnemyCarrierEntity extends BufferedEntity {
 			if(orbiting) {
 				if(turned) {
 					if(rotVel != 0)
-					System.out.println("turned");
+						this.applyRotVelDamping();
 				}
 				else {
 					// Make an initial turn to begin the orbit
 					turnCount++;
-					if(turnCount < 10)
+					if(turnCount < 100)
 						this.turn(Rotation.CLOCKWISE, turnSpeed, turnThrust);
 					else {
 						turned = true;
-						this.rotAcc = 0;
+						//this.rotAcc = 0;
 					}
 						
 					//rotateImage();
@@ -74,7 +68,6 @@ public class EnemyCarrierEntity extends BufferedEntity {
 			
 			this.applyForces();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

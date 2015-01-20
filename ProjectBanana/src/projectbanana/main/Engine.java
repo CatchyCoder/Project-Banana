@@ -29,7 +29,7 @@ public final class Engine implements Runnable {
 	 * + Make carrier ships that spawn the homing mines (EnemyEntity)
 	 * 
 	 * Bugs:
-	 * * NOT EXACTLY A BUG.. but there is a slight chance that the menu will not pop put correctly
+	 * * NOT EXACTLY A BUG.. but there is a slight chance that the menu will not pop up correctly
 	 * 		when stopping the game (if stop() gets called inside the isRunning() if statement in render())
 	 * - Frame timing gets messed up once you stop and start the game again... is noticeable when you
 	 * 		stop and start the game several times at 1 frame a second
@@ -59,7 +59,7 @@ public final class Engine implements Runnable {
 	
 	public static boolean sound = false;
 	private static boolean isRunning = false;
-	public static boolean showPerformance = false;
+	public static boolean showPerformance = true;
 		
 	public Engine() {
 		// Adding input for the actual game
@@ -111,23 +111,21 @@ public final class Engine implements Runnable {
 		cameraY2 = (int)(y + (SIZE.height / zoom));
 		
 		// If the user camera starts to reach the end of the map, stop the camera
-		if(cameraX <= 0 || cameraY <= 0 || cameraX2 >= image.getWidth() || cameraY2 >= image.getHeight()) {
-			if(cameraX <= 0) {
-				cameraX = 0;
-				cameraX2 = (int) (SIZE.width * 2 / zoom);
-			}
-			if(cameraY <= 0) {
-				cameraY = 0;
-				cameraY2 = (int) (SIZE.height * 2 / zoom);
-			}
-			if(cameraX2 >= image.getWidth()) {
-				cameraX2 = image.getWidth();
-				cameraX = image.getWidth() - (int) (SIZE.width * 2 / zoom);
-			}
-			if(cameraY2 >= image.getHeight()) {
-				cameraY2 = image.getHeight();
-				cameraY = image.getHeight() - (int) (SIZE.height * 2 / zoom);
-			}
+		if(cameraX <= 0) {
+			cameraX = 0;
+			cameraX2 = (int) (SIZE.width * 2 / zoom);
+		}
+		else if(cameraX2 >= image.getWidth()) {
+			cameraX2 = image.getWidth();
+			cameraX = image.getWidth() - (int) (SIZE.width * 2 / zoom);
+		}
+		if(cameraY <= 0) {
+			cameraY = 0;
+			cameraY2 = (int) (SIZE.height * 2 / zoom);
+		}
+		else if(cameraY2 >= image.getHeight()) {
+			cameraY2 = image.getHeight();
+			cameraY = image.getHeight() - (int) (SIZE.height * 2 / zoom);
 		}
 		
 		// After the camera is in place, render the world

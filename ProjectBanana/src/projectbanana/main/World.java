@@ -82,13 +82,13 @@ public class World {
 	}
 	
 	private void loadWave() {
-		double easiness = 5; // 0 is the absolute hardest (10)
+		double easiness = 10; // 0 is the absolute hardest (10)
 		int maxEnemies = 50;
 		int enemyCount = (int) ((wave / (wave + easiness)) * maxEnemies);
 		
 		// Generating enemies
-		for(int x = 0; x < (int) (enemyCount * 0); x++) new HomingMineEntity(randomOuterX(), randomOuterY());
-		for(int x = 0; x < (int) (enemyCount * 0); x++) new SeekerEntity(randomOuterX(), randomOuterY());
+		for(int x = 0; x < (int) (enemyCount * 1); x++) new HomingMineEntity(randomOuterX(), randomOuterY());
+		for(int x = 0; x < (int) (enemyCount * 1); x++) new SeekerEntity(randomOuterX(), randomOuterY());
 		for(int x = 0; x < (int) (enemyCount * 1); x++) new EnemyCarrierEntity(randomOuterX(), randomOuterY());		
 	}
 	
